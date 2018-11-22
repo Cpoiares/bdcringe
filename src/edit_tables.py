@@ -8,7 +8,7 @@ global conn
 
 def drop():
     sqlDROP = """DROP TABLE %s;"""
-    table = raw_input("WHICH TABLE TO DROP")
+    table = input("WHICH TABLE TO DROP")
     cur.execute(sqlDROP)
     conn.commit()
     cur.close()
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     try:
         conn = psycopg2.connect(host="localhost", database="dropmusic", user="postgres", password="postgres")
         cur = conn.cursor()
-        option = raw_input("CREATE - 1\nDROP - 2\nQUIT - 3")
+        option = input("CREATE - 1\nDROP - 2\nQUIT - 3")
         if option == '1':
             create()
         elif option == '2':

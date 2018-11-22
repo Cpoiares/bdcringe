@@ -9,15 +9,14 @@ global online
 def login():
     try:
         sql = """SELECT * FROM users where username like %s and password like %s """
-        user = raw_input("Insert Username:")
-        print(user)
-        pw = raw_input("Insert Password: ")
+        user = input("Insert Username:")
+        pw = input("Insert Password: ")
         cur.execute(sql, (user, pw,))
     except(Exception, psycopg2.DatabaseError) as error:
         print("RIP LOGIN\n" + str(error))
         login()
     except(Exception, KeyboardInterrupt) as error:
-        print("Cancelling login")
+        print("Cancelling login\nGoing back to the first menu")
         firstMenu()
     else:
         print("Logged in!")
@@ -28,14 +27,14 @@ def login():
 def register():
     try:
         sql = """INSERT INTO users(username, password) values(%s, %s) returning user_id"""
-        user = raw_input("Insert Username: ")
-        pw = raw_input("Insert Password: ")
+        user = input("Insert Username: ")
+        pw = input("Insert Password: ")
         cur.execute(sql, (user, pw,))
     except(Exception, psycopg2.DatabaseError) as error:
         print("RIP REGISTER" + str(error))
         register()
     except(Exception, KeyboardInterrupt) as error:
-        print("Cancelling register" + str(error))
+        print("Cancelling login\nGoing back to the first menu")
         firstMenu()
     else:
         print("Logged in!")
@@ -51,7 +50,7 @@ def mainMenu():
         }
         for key in switch_dict:
             print(str(key) + " -> " + str(switch_dict.get(key)) + "\n")
-        option = raw_input("Enter valid option\n")
+        option = input("Enter valid option\n")
         if option in switch_dict:
             switch_dict[option]()
         else:
@@ -64,7 +63,7 @@ def mainMenu():
 def findUser():
     try:
         sql = """SELECT username, password FROM users WHERE username = %s"""
-        user = raw_input("INSERT USERNAME TO SEARCH: ")
+        user = input("INSERT USERNAME TO SEARCH: ")
         cur.execute(sql, (user,))
     except(Exception, psycopg2.DatabaseError) as err:
         print("FAILED TO SEARCH" + str(err))
@@ -78,14 +77,15 @@ def findUser():
 
 def firstMenu():
     try:
-        option = input("OPTIONS:\nREGISTER - 1\nLOGIN - 2\n")
-        if option == 1:
-            register()
-        elif option == 2:
-            login()
+        option = input("OPTIONS:\nREGISTER - 1\nLOGIN - 2\nCNTRL+C TO LEAVE")
     except(Exception, KeyboardInterrupt) as err:
         print("BYE\n" + str(err))
-        return
+        leave()
+    else: 
+        if option == '1':
+            register()
+        elif option == '2':
+            login()
 
 def leave():
     conn.commit()
