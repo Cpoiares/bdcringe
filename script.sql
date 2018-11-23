@@ -1,5 +1,5 @@
 CREATE TABLE musica (
-  id			 BIGINT,
+  id			 SERIAL,
   nome			 VARCHAR(512) NOT NULL,
   data			 DATE,
   historia		 VARCHAR(512),
@@ -31,7 +31,7 @@ CREATE TABLE grupo_musical (
 );
 
 CREATE TABLE concerto (
-  id		 BIGINT,
+  id		 SERIAL,
   data		 DATE,
   morada		 VARCHAR(512),
   grupo_musical_nome VARCHAR(512) NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE critica (
 );
 
 CREATE TABLE playlist (
-  id			 BIGINT,
+  id			 SERIAL,
   nome		 VARCHAR(512) NOT NULL,
   privada		 BOOL NOT NULL DEFAULT true,
   utilizador_username VARCHAR(512) NOT NULL,
@@ -69,14 +69,14 @@ CREATE TABLE utilizador (
 );
 
 CREATE TABLE artista (
-  id		 BIGINT,
+  id		 SERIAL,
   nome		 VARCHAR(512) NOT NULL,
   data_nascimento DATE,
   PRIMARY KEY(id)
 );
 
 CREATE TABLE editora (
-  id	 BIGINT,
+  id	 SERIAL,
   nome VARCHAR(512) NOT NULL,
   PRIMARY KEY(id)
 );
