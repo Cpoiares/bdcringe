@@ -1,9 +1,11 @@
 import bdcringe.database.user as user
+import bdcringe.database.artists as artists
+import bdcringe.database.songs as songs
 
 global online
 
 
-def login_menu():
+def login():
     global online
 
     username = input("Username: ")
@@ -16,7 +18,7 @@ def login_menu():
         print("sqn.")
 
 
-def register_menu():
+def register():
     global online
 
     username = input("Username: ")
@@ -29,23 +31,22 @@ def register_menu():
         print("sqn.")
 
 
-def first_menu():
-    try:
-        print("1 - Register")
-        print("2 - Login")
-        print("3 - Leave")
-        option = input("> ")
-    except(Exception, KeyboardInterrupt) as err:
-        print("BYE\n" + str(err))
-        leave()
-    else: 
-        if option == '1':
-            register_menu()
-        elif option == '2':
-            login_menu()
-        elif option == '3':
-            leave()
+def main_menu():
+    print("2 - Procurar Artista")
+    option = input("> ")
 
+    if option == '2':
+        search_artist()
+
+
+def search_artist():
+    print("1 - Procurar Artista por nome")
+    option = input("> ")
+
+    if option == '1':
+        nome = input("Nome: ")
+        artistas = artists.search_name(nome)
+        print(artistas)
 
 def leave():
     print("kk.")
@@ -54,4 +55,14 @@ def leave():
 
 if __name__ == '__main__':
     online = False
-    first_menu()
+    print("1 - Register")
+    print("2 - Login")
+    print("3 - Leave")
+    option = input("> ")
+
+    if option == '1':
+        register()
+    elif option == '2':
+        login()
+    elif option == '3':
+        leave()
