@@ -2,18 +2,28 @@
 
 # Relatório meta 2 (28 Novembro 2018)
 
+# Table of Contents
+1. [Contactos](#Contactos)
+2. [Funcionalidades](#Funcionalidades)
+    1. [Músicas](#Musicas)
+3. [Diagrama Conceptual](#conceptual)
+4. [Diagrama Físico](#fisico)
+
+
+### Contactos
+
 | Nome | Email | Número de Estudante | 
 |:---|---:|:---|
 | Alexandre Faria | afaria@student.dei.uc.pt | 2014226180 |
 | Carlos Poiares |  cpoiares@student.dei.uc.pt |  2014226236 |
 
-# Table of Contents
-1. [Funcionalidades](#Funcionalidades)
-2. [Procurar música](#Procurar música)
-3. [Exemplo](#Exemplo)
 
 ## Funcionalidades
+
+
 ### Procurar música
+
+Dado um nome é retornada toda a informação geral de uma música e tambem a lista de artistas
 
 ```sql
 select
@@ -32,7 +42,3 @@ where
     and                               m.id = ma.musica_id 
     and                               m.nome like '%s'
 ```
-
-
-
-## Exemplo
