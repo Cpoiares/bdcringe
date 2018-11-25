@@ -11,11 +11,12 @@ def search_name(music_name):
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql_music_info, (music_name, ))
-        values = cur.fetchall()
+
     except DatabaseError as error:
         print(error)
-
-    return values
+    else:
+        values = cur.fetchall()
+        return values
 
 
 if __name__ == '__main__':

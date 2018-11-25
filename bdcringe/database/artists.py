@@ -16,3 +16,28 @@ def search_name(nome):
         print(error)
 
     return None
+
+def new_artist(artist_name, artist_db):
+    sql = """INSERT INTO artista(nome, data_nascimento) values(%s, %s);"""
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (artist_name, artist_db))
+    except DatabaseError as error:
+        raise DatabaseError(error)
+    else:
+        pass
+
+
+def exists_artist(artist_name):
+    sql = """SELECT * FROM artista WHERE nome like %s"""
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (artist_name,))
+    except DatabaseError as error:
+        return False
+    else:
+        return True
+
+
