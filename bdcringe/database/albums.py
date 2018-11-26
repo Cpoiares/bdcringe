@@ -2,30 +2,30 @@ from psycopg2 import DatabaseError
 from bdcringe.database import Database
 
 
-def search_album(album_name):
+def search(nome):
+    sql = "SELECT * FROM album WHERE nome like %%s%"
+    values = None
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (nome,))
+        values = cur.fetchall()
+
+    except DatabaseError as error:
+        print(error)
+
+    return values
+
+
+def exists(nome):
     sql = """SELECT * FROM album WHERE nome like %s"""
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql,(album_name,))
-
+        cur.execute(sql, (nome,))
+        cur.fetchall()
     except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
-        values = cur.fetchall()
-        return values
-    pass
+        print(error)
+        return False
 
-
-def exists_album(album_name):
-    sql = """SELECT * FROM album WHERE nome like %s"""
-    try:
-        conn = Database.connect()
-        cur = conn.cursor()
-        cur.execute(sql,(album_name,))
-    except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
-        values = cur.fetchall()
-        return values
-    pass
+    return True

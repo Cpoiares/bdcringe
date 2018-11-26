@@ -3,7 +3,7 @@ from bdcringe.database import Database
 
 
 def login(username, password):
-    sql = "SELECT * FROM utilizador where username like %s and password like %s "
+    sql = "SELECT * FROM utilizador where username like %s and password like %s"
 
     try:
         conn = Database.connect()
@@ -35,3 +35,47 @@ def register(username, password):
         return False
 
     return True
+
+
+def get_users():
+    sql = "SELECT username FROM utilizador"
+    values = None
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql,())
+        values = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return values
+
+
+def make_editor(username):
+    sql = "UPDATE utilizador SET editor = true WHERE username like '%s'"
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (username, ))
+    except DatabaseError as error:
+        print(error)
+        return False
+
+    return True
+
+
+def find_user(username):
+    sql = "SELECT username FROM utilizador WHERE username LIKE %s"
+    user = None
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (username,))
+        user = cur.fetchone()
+    except DatabaseError as error:
+        print(error)
+
+    return user
