@@ -2,14 +2,17 @@ from psycopg2 import DatabaseError
 from bdcringe.database import Database
 
 
-def search_name(nome):
-    sql = "SELECT * FROM artista where nome like %s"
+def search(nome):
+    # FIXME: OLHA NAO SEI ESTA MERAD NAO QUER DAR COM %s
+    sql = "SELECT * FROM artista where nome like '%" + nome + "%'"
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (nome, ))
-        values = cur.fetchone()
+        # cur.execute(sql, (nome, ))
+        cur.execute(sql)
+        values = cur.fetchall()
+        return values
 
     except DatabaseError as error:
         print(error)
@@ -19,18 +22,19 @@ def search_name(nome):
 
 
 
-def insert_artist(artist_name, artist_db):
-    sql = "INSERT INTO artista(nome, data_nascimento) values(%s, %s);"
+def insert(nome, data_nascimento):
+    sql = "INSERT INTO artista(nome, data_nascimento) values (%s, %s)"
+
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (artist_name, artist_db))
+        cur.execute(sql, (nome, data_nascimento))
         conn.commit()
     except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
-        pass
+        print(error)
+        return False
 
+    return True
 
 def exists(artist_name):
     sql = "SELECT * FROM artista WHERE nome like %s"
@@ -63,3 +67,5 @@ def get_songs(artist_name):
         raise DatabaseError(error)
     else:
         return info
+
+
