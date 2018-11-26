@@ -46,29 +46,56 @@ where
     username like %s and
     password like %s
 ```
-
+### Tornar Editor
+##### Procurar utilizador
+É feita uma listagem de todos os utilizadores na base de dados para tornar a procura mais fácil para o utilizador.
+```sql
+SELECT nome
+FROM utilizador
+```
+##### Tornar utilizador
+A partir do username introduzido pelo utilizador altera os seus privilégios de editor.
+```sql
+UPDATE
+   utilizador 
+SET
+   editor = true 
+WHERE
+   nome like '%s'
+```
 ### Procurar música
 
 Dado um nome é retornada toda a informação geral e a lista de artistas de cada música encontrada.
 
 ```sql
-select
+SELECT
     m.nome,
     m.data,
     m.historia,
     m.genero,
     a.nome,
     a.data_nascimento                         
-from
+FROM
     artista a,
     musica_artista ma,
     musica m                         
-where
+WHERE
     a.id = ma.artista_id 
-    and                               m.id = ma.musica_id 
-    and                               m.nome like '%%s%'
+    and m.id = ma.musica_id 
+    and m.nome like '%%s%'
 ```
+### Procurar Artista
 
+Dado um nome de um artista é retornada toda a informação relativa ao artista em questão, retorna erro no caso do artista não existir.
+
+```sql
+SELECT 
+    * 
+FROM
+    artista
+WHERE
+    nome like '%s'
+```
 ## Diagramas
 
 #### Conceptual
