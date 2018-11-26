@@ -3,7 +3,7 @@ from bdcringe.database import Database
 
 
 def search(nome):
-    #FIXME: OLHA NAO SEI ESTA MERAD NAO QUER DAR COM %s
+    # FIXME: OLHA NAO SEI ESTA MERAD NAO QUER DAR COM %s
     sql = "SELECT * FROM artista where nome like '%" + nome + "%'"
 
     try:
@@ -53,4 +53,3 @@ def get_all():
 if __name__ == '__main__':
     test = get_all()
     print(test)
-

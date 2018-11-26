@@ -11,11 +11,7 @@ def login(username, password):
         cur.execute(sql, (username, password))
         values = cur.fetchone()
 
-        if values is None:
-            return False
-        else:
-            return True
-        # return values is not None
+        return values is not None
 
     except DatabaseError as error:
         print(error)

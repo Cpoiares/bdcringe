@@ -43,7 +43,7 @@ def main_menu():
         print("0. Procurar artista")
         print("1. Quit")
         option = int(input("> "))
-        if (option >= 0) and (option < 1):
+        if (option >= 0) and (option < len(options)):
             options[option]()
 
 
@@ -54,13 +54,20 @@ def search_artist():
     if option == '1':
         nome = input("Nome: ")
         artistas = artists.search(nome)
-        print(artistas)
+
+        for i, artista in enumerate(artistas):
+            print("{0}. [{data}] : {nome}".format(i, nome=artista[1], data=artista[2]))
+
+        print("Mostrar detalhes de algum artista?")
+        option = input("> ")
+
+
 
 
 def insert_artist():
     print("Inserir novo artista...")
-    name = input("Introduza o nome do artista a criar: ")
-    data = input("Introduza o data de nascimento do artista no formato YY-MM-DD:\n")
+    name = input("Nome do artista a criar: ")
+    data = input("Data de nascimento do artista (aaa-mm-dd): ")
     try:
         artists.insert(name, data)
     except DatabaseError as error:
