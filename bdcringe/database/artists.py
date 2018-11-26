@@ -17,8 +17,9 @@ def search_name(nome):
 
     return None
 
+
 def insert_artist(artist_name, artist_db):
-    sql = """INSERT INTO artista(nome, data_nascimento) values(%s, %s);"""
+    sql = "INSERT INTO artista(nome, data_nascimento) values(%s, %s);"
     try:
         conn = Database.connect()
         cur = conn.cursor()
@@ -29,16 +30,19 @@ def insert_artist(artist_name, artist_db):
     else:
         pass
 
+
 def exists_artist(artist_name):
-    sql = """SELECT * FROM artista WHERE nome like %s"""
+    sql = "SELECT * FROM artista WHERE nome like %s"
+
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (artist_name,))
-    except DatabaseError as error:
+        cur.execute(sql, (artist_name, ))
+        values = cur.fetchall()
+        return len(values) != 0
+
+    except DatabaseError:
         return False
-    else:
-        return True
 
 
 def get_songs(artist_name):
@@ -56,6 +60,5 @@ def get_songs(artist_name):
         info = cur.fetchall()
     except DatabaseError as error:
         raise DatabaseError(error)
-        return None
     else:
         return info
