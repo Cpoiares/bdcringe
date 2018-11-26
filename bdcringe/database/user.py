@@ -37,7 +37,7 @@ def register(username, password):
     return True
 
 
-def get_users():
+def get_all():
     sql = "SELECT username FROM utilizador"
     values = None
 
