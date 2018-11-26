@@ -41,3 +41,21 @@ def exists_artist(artist_name):
         return True
 
 
+def get_songs(artist_name):
+    sql = """SELECT nome, data, historia 
+            FROM 
+            musica, musica_artista 
+            WHERE 
+            artista_id = (SELECT id FROM artista WHERE nome like %s) 
+            and 
+            musica_id = id"""
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (artist_name,))
+        info = cur.fetchall()
+    except DatabaseError as error:
+        raise DatabaseError(error)
+        return None
+    else:
+        return info

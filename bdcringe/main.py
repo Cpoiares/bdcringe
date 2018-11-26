@@ -82,6 +82,7 @@ def main_menu():
         3: insert_group,
         4: insert_song,
         5: insert_label,
+        6: list_artist_songs
     }
 
     option = 0
@@ -92,8 +93,9 @@ def main_menu():
         print("3. Inserir grupo")
         print("4. Inserir musica")
         print("5. Inserir editora")
+        print("6. Listar musicas de um artista")
         option = int(input("> "))
-        if (option >= 0) and (option < 6):
+        if (option >= 0) and (option < 7):
             options[option]()
 
 
@@ -170,6 +172,18 @@ def insert_album():
     else:
         print('Success')
         main_menu()
+
+
+def list_artist_songs():
+    artista = input("Introduza o nome do artista a procurar:\n> ")
+    while not artists.exists_artist(artista):
+        artista = input("Introduza o nome do artista a procurar:\n> ")
+
+    try:
+        print(artists.get_songs(artista))
+    except DatabaseError as err:
+        print(err)
+
 
 
 def insert_song():
