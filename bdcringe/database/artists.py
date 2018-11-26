@@ -32,7 +32,7 @@ def insert_artist(artist_name, artist_db):
         pass
 
 
-def exists_artist(artist_name):
+def exists(artist_name):
     sql = "SELECT * FROM artista WHERE nome like %s"
 
     try:

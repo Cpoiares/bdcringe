@@ -41,23 +41,6 @@ def register():
         main_menu()
 
 
-def register():
-    global online
-
-    switch_dict = {
-        "0" : leave,
-        "1" : find_user
-    }
-    for key in switch_dict:
-        print(key, " -> ", switch_dict.get(key))
-    option = input("Enter valid option\n")
-    if option in switch_dict:
-        switch_dict[option]()
-    else:
-        print("ENTER A VALID OPTION")
-        main_menu()
-
-
 def find_user():
     try:
         sql = "SELECT username, password FROM utilizador WHERE username = %s"
@@ -137,7 +120,8 @@ def insert_label():
 def insert_group():
     name = input("Introduza o nome do grupo a introduzir:\n> ")
     artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
-    while artists.search_name(artista) is None:
+
+    while not artists.exists(artista):
         artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
 
     date_begin = input("Introduza a data de criação do grupo:\n> ")
@@ -177,7 +161,8 @@ def insert_album():
 
 def list_artist_songs():
     artista = input("Introduza o nome do artista a procurar:\n> ")
-    while not artists.exists_artist(artista):
+
+    while not artists.exists(artista):
         artista = input("Introduza o nome do artista a procurar:\n> ")
 
     try:
@@ -186,27 +171,24 @@ def list_artist_songs():
         print(err)
 
 
-
 def insert_song():
     try:
         print("INSERIR NOVA MUSICA\nIntroduza o nome da musica:\n")
-        name = input("> ")
-        date = input("Data da musica:\n> ")
-        history = input("Breve história da música:\n> ")
+        nome = input("> ")
+        data = input("Data da musica:\n> ")
+        historia = input("Breve história da música:\n> ")
         genre = input("Genero da musica:\n> ")
 
         album = input("Nome do album:\n> ")
         while albums.search_album(album) is None:
             album = input("Nome do album:\n> ")
 
-        artist = input("Nome do artista:\n> ")
-        while artists.search_name(artist) is None:
-            artist = input("Nome do artista não encontrado!\nNome do artista:\n> ")
+        artista = input("Nome do artista:\n> ")
+        while not artists.exists(artista):
+            artista = input("Nome do artista não encontrado!\nNome do artista:\n> ")
 
-        songs.insert_new(name, date, history, genre, album, artist)
-    except KeyboardInterrupt as error:
-        print("CNTRL+C -> Going back to main menu")
-        main_menu()
+        songs.insert_new(nome, data, historia, genre, album, artista)
+
     except DatabaseError as error:
         print(error)
     else:
