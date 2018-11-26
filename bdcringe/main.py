@@ -137,15 +137,17 @@ def insert_label():
 def insert_group():
     name = input("Introduza o nome do grupo a introduzir:\n> ")
     artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
+
     while not artists.exists_artist(artista):
         artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
 
     date_begin = input("Introduza a data de criação do grupo:\n> ")
     date_end = input("Introduza a data de fim do grupo: 0 caso de ainda estar ativo.\n> ")
+
     try:
         # cria um novo grupo e adiciona posteriormente
         groups.insert_new(name, date_begin, date_end)
-        groups.add_artist(name, artista)
+        groups.add_artist(artista, name)
     except DatabaseError as error:
         print(error)
     else:
