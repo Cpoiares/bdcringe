@@ -1,11 +1,9 @@
 import bdcringe.database.user as user
 import bdcringe.database.artists as artists
 import bdcringe.database.songs as songs
-import bdcringe.database.albums as albums
+import bdcringe.database.albuns as albuns
 from psycopg2 import DatabaseError
 
-global conn
-global cur
 global online
 
 
@@ -18,58 +16,21 @@ def login():
     if user.login(username, password):
         print("Logged in!")
         online = True
-        main_menu()
-  
-  
-def register():
-    try:
-        sql = "INSERT INTO utilizador(username, password) values(%s, %s)"
-        user = input("Insert Username: ")
-        pw = input("Insert Password: ")
-        cur.execute(sql, (user, pw,))
-    except DatabaseError as error:
-        print("RIP REGISTER" + str(error))
-        register()
-    except(Exception, KeyboardInterrupt) as error:
-        print("Cancelling login\nGoing back to the first menu")
-        first_menu()
     else:
-        print("Logged in!")
-        online = True
-        main_menu()
+        print("sqn.")
 
 
 def register():
     global online
 
-    switch_dict = {
-        "0" : leave,
-        "1" : find_user
-    }
-    for key in switch_dict:
-        print(key, " -> ", switch_dict.get(key))
-    option = input("Enter valid option\n")
-    if option in switch_dict:
-        switch_dict[option]()
-    else:
-        print("ENTER A VALID OPTION")
-        main_menu()
+    username = input("Username: ")
+    password = input("Password: ")
 
-
-def find_user():
-    try:
-        sql = "SELECT username, password FROM utilizador WHERE username = %s"
-        user = input("INSERT USERNAME TO SEARCH: ")
-        cur.execute(sql, (user,))
-    except DatabaseError as err:
-        print("FAILED TO SEARCH" + str(err))
-    except(Exception, KeyboardInterrupt) as err:
-        print(str(err))
-        main_menu()
+    if user.register(username, password):
+        print("Account created!")
+        online = True
     else:
-        print("SUCESS! Found: ")
-        print(cur.fetchone())
-        main_menu()
+        print("sqn.")
 
 
 def main_menu():
@@ -87,54 +48,50 @@ def main_menu():
 
 
 def search_artist():
-    print("1 - Procurar Artista por nome")
+    print("1. Procurar Artista por nome: ")
     option = input("> ")
 
     if option == '1':
         nome = input("Nome: ")
-        artistas = artists.search_name(nome)
+        artistas = artists.search(nome)
         print(artistas)
 
+
 def insert_artist():
-    print("INSERIR NOVO ARTISTA\nIntroduza o nome do artista a criar:\n")
-    name = input("> ")
-    print("Introduza o data de nascimento do artista no formato YY-MM-DD:\n")
-    date = input("> ")
+    print("Inserir novo artista...")
+    name = input("Introduza o nome do artista a criar: ")
+    data = input("Introduza o data de nascimento do artista no formato YY-MM-DD:\n")
     try:
-        artists.new_artist(name, date)
+        artists.insert(name, data)
     except DatabaseError as error:
         print(error)
     else:
         print("Sucess")
 
+
 def insert_song():
-    try:
-        print("INSERIR NOVA MUSICA\nIntroduza o nome da musica:\n")
-        name = input("> ")
-        date = input("Data da musica:\n> ")
-        history = input("Breve história da música:\n> ")
-        genre = input("Genero da musica:\n> ")
 
-        album = input("Nome do album:\n> ")
-        while not albums.exists_album(album):
-            album = input("Nome do album:\n> ")
+    print("Inserir nova música...")
+    name = input("Introduza o nome da musica: ")
+    date = input("Data da musica (aaa-mm-dd): ")
+    history = input("Breve história da música: ")
+    genre = input("Genero da musica: ")
+    album = input("Nome do album: ")
 
-        artist = input("Nome do artista:\n> ")
-        while not artists.exists_artist(artist):
-            artist = input("Nome do artista não encontrado!\nNome do artista:\n> ")
-
-        songs.insert_new(name, date, history, genre, album, artist)
-        # sei lá o que criar primeiro ja pego nisto
-    except KeyboardInterrupt as error:
-        print("CNTRL+C -> Going back to main menu")
-        main_menu()
-    except DatabaseError as error:
-        print(error)
+    # try:
+    #     while not albuns.exists_album(album):
+    #         album = input("Nome do album: ")
+    #
+    #     artist = input("Nome do artista: ")
+    #     while not artists.exists_artist(artist):
+    #         artist = input("Nome do artista não encontrado!\nNome do artista:\n> ")
+    #
+    #     songs.insert_new(name, date, history, genre, album, artist)
 
 
 def leave():
-    print("BYE")
-    return
+    print("Adeuxito manito.")
+    exit(0)
 
 
 if __name__ == '__main__':
