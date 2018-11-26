@@ -137,8 +137,7 @@ def insert_label():
 def insert_group():
     name = input("Introduza o nome do grupo a introduzir:\n> ")
     artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
-
-    while not artists.exists_artist(artista):
+    while artists.search_name(artista) is None:
         artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
 
     date_begin = input("Introduza a data de criação do grupo:\n> ")
@@ -197,11 +196,11 @@ def insert_song():
         genre = input("Genero da musica:\n> ")
 
         album = input("Nome do album:\n> ")
-        while not albums.exists_album(album):
+        while albums.search_album(album) is None:
             album = input("Nome do album:\n> ")
 
         artist = input("Nome do artista:\n> ")
-        while not artists.exists_artist(artist):
+        while artists.search_name(artist) is None:
             artist = input("Nome do artista não encontrado!\nNome do artista:\n> ")
 
         songs.insert_new(name, date, history, genre, album, artist)

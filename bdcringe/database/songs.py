@@ -5,7 +5,7 @@ from bdcringe.database import Database
 def search_name(music_name):
     sql_music_info = """select m.nome, m.data, m.historia, m.genero, a.nome, a.data_nascimento
                         from artista a, musica_artista ma, musica m
-                        where a.id = ma.artista_id and m.id = ma.musica_id and m.nome like 'snoop' """
+                        where a.id = ma.artista_id and m.id = ma.musica_id and m.nome like %s """
     values = None
     try:
         conn = Database.connect()
@@ -26,7 +26,6 @@ def insert_new(name, date, history, genre, album, artist):
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql_new_music, (name, date, history, genre, album))
-        conn.commit()
         cur.execute(sql, (name, artist))
         conn.commit()
     except DatabaseError as error:

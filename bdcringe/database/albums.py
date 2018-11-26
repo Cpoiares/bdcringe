@@ -10,7 +10,8 @@ def search_album(album_name):
         cur.execute(sql,(album_name,))
 
     except DatabaseError as error:
-        raise DatabaseError(error)
+        print(error)
+        return None
     else:
         values = cur.fetchall()
         return values

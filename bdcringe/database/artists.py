@@ -10,12 +10,13 @@ def search_name(nome):
         cur = conn.cursor()
         cur.execute(sql, (nome, ))
         values = cur.fetchone()
-        return values
 
     except DatabaseError as error:
         print(error)
+        return None
+    else:
+        return values
 
-    return None
 
 
 def insert_artist(artist_name, artist_db):
@@ -50,7 +51,7 @@ def get_songs(artist_name):
             FROM 
             musica, musica_artista 
             WHERE 
-            artista_id = (SELECT id FROM artista WHERE nome like %s) 
+            artista_id = (SELECT id FROM artista WHERE nome like '%s') 
             and 
             musica_id = id"""
     try:

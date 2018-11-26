@@ -8,10 +8,11 @@ def exists_group(group_name):
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql, (group_name,))
+        values = cur.fetchone()
     except DatabaseError as error:
         return False
     else:
-        return True
+        return values
 
 
 def insert_new(name, date_begin, date_end):
@@ -46,7 +47,7 @@ def add_artist(artist_name, group_name):
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (artist_name, group_name))
+        cur.execute(sql, (group_name, artist_name))
         conn.commit()
     except DatabaseError as error:
         print(error)
