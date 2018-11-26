@@ -4,21 +4,21 @@ from bdcringe.database import Database
 
 def search_name(music_name):
     sql_music_info = """
-    select
-        m.nome,
-        m.data,
-        m.historia,
-        m.genero,
-        a.nome,
-        a.data_nascimento                         
-    from
-        artista a,
-        musica_artista ma,
-        musica m                         
-    where
-        a.id = ma.artista_id 
-        and m.id = ma.musica_id 
-        and m.nome like %%s%
+        select
+            m.nome,
+            m.data,
+            m.historia,
+            m.genero,
+            a.nome,
+            a.data_nascimento                         
+        from
+            artista a,
+            musica_artista ma,
+            musica m                         
+        where
+            a.id = ma.artista_id and
+            m.id = ma.musica_id and
+            m.nome like %%s%
     """
     values = None
     try:
@@ -32,20 +32,44 @@ def search_name(music_name):
 
     return values
 
-def insert_new(name, date, history, genre, album, artist):
-    sql_new_music = """INSERT INTO musica(nome, data, historia, genero, album_nome) VALUES('%s', '%s', '%s', '%s', '%s')"""
-    sql = """INSERT INTO musica_artista(artista_id, musica_id) SELECT a.id, m.id FROM artista a, musica m WHERE a.nome like '%s' and m.nome like '%s'"""
+
+def insert(nome, data, historia, genero, album, artist):
+    sql_musica = """
+        INSERT 
+        INTO
+            musica
+            (nome, data, historia, genero, album_nome) 
+        VALUES
+            ('%s', '%s', '%s', '%s', '%s')
+    """
+    sql_artista = """
+        INSERT 
+        INTO
+            musica_artista
+            (artista_id, musica_id)
+            SELECT
+                a.id,
+                m.id
+            FROM
+                artista a,
+                musica m
+            WHERE
+                m.nome like '%s' and
+                a.nome like '%s'
+    """
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql_new_music, (name, date, history, genre, album))
-        cur.execute(sql, (name, artist))
+        cur.execute(sql_musica, (nome, data, historia, genero, album))
+        cur.execute(sql_artista, (nome, artist))
+        cur.commit()
     except DatabaseError as error:
         print(error)
         return False
-    else:
-        return True
+
+    return True
+
 
 if __name__ == '__main__':
     search_name('snoop')
