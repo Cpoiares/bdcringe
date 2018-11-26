@@ -1,7 +1,6 @@
 import bdcringe.database.user as user
 import bdcringe.database.artists as artists
 import bdcringe.database.songs as songs
-import bdcringe.database.albums as albums
 import bdcringe.database.labels as labels
 import bdcringe.database.groups as groups
 import bdcringe.database.albuns as albuns
@@ -136,7 +135,7 @@ def insert_album():
     while not labels.exists_label(label):
         label = input("Introduza a editora que criou o album:\n> ")
     try:
-        albums.insert_new(name, date, group, label)
+        albuns.insert_new(name, date, group, label)
     except DatabaseError as error:
         print(error)
     else:
@@ -165,7 +164,7 @@ def insert_song():
         genre = input("Genero da musica:\n> ")
 
         album = input("Nome do album:\n> ")
-        while albums.search_album(album) is None:
+        while albuns.search_album(album) is None:
             album = input("Nome do album:\n> ")
 
         artista = input("Nome do artista:\n> ")
