@@ -2,14 +2,16 @@ from psycopg2 import DatabaseError
 from bdcringe.database import Database
 
 
-def search_name(nome):
-    sql = "SELECT * FROM artista where nome like %s"
+def search(nome):
+    #FIXME: OLHA NAO SEI ESTA MERAD NAO QUER DAR COM %s
+    sql = "SELECT * FROM artista where nome like '%" + nome + "%'"
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (nome, ))
-        values = cur.fetchone()
+        # cur.execute(sql, (nome, ))
+        cur.execute(sql)
+        values = cur.fetchall()
         return values
 
     except DatabaseError as error:
@@ -18,27 +20,37 @@ def search_name(nome):
     return None
 
 
-def new_artist(nome, data_nascimento):
-    sql = "INSERT INTO artista(nome, data_nascimento) values(%s, %s);"
+def insert(nome, data_nascimento):
+    sql = "INSERT INTO artista(nome, data_nascimento) values (%s, %s)"
+
     try:
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql, (nome, data_nascimento))
+        conn.commit()
     except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
-        pass
+        print(error)
+        return False
+
+    return True
 
 
-def exists_artist(artist_name):
-    sql = "SELECT * FROM artista WHERE nome like %s"
+def get_all():
+    sql = "SELECT * from artista"
+    values = None
+
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (artist_name,))
+        cur.execute(sql)
+        values = cur.fetchall()
     except DatabaseError as error:
-        return False
-    else:
-        return True
+        print(error)
 
+    return values
+
+
+if __name__ == '__main__':
+    test = get_all()
+    print(test)
 
