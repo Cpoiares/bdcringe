@@ -31,6 +31,9 @@ def search_name(music_name):
         print(error)
 
     return values
+def insert_new(name, date, history, genre, album, artist):
+    sql_new_music = """INSERT INTO musica(nome, data, historia, genero, album_nome) VALUES(%s, %s, %s, %s, %s)"""
+    sql = """INSERT INTO musica_artista(artista_id, musica_id) SELECT a.id, m.id FROM artista a, musica m WHERE a.nome like %s and m.nome like %s"""
 
 
 def insert(nome, data, historia, genero, album, artist):
@@ -61,9 +64,9 @@ def insert(nome, data, historia, genero, album, artist):
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql_musica, (nome, data, historia, genero, album))
-        cur.execute(sql_artista, (nome, artist))
-        cur.commit()
+        cur.execute(sql_new_music, (name, date, history, genre, album))
+        cur.execute(sql, (name, artist))
+        conn.commit()
     except DatabaseError as error:
         print(error)
         return False

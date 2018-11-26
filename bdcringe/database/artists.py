@@ -16,8 +16,10 @@ def search(nome):
 
     except DatabaseError as error:
         print(error)
+        return None
+    else:
+        return values
 
-    return None
 
 
 def insert(nome, data_nascimento):
@@ -34,22 +36,36 @@ def insert(nome, data_nascimento):
 
     return True
 
-
-def get_all():
-    sql = "SELECT * from artista"
-    values = None
+def exists(artist_name):
+    sql = "SELECT * FROM artista WHERE nome like %s"
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql)
+        cur.execute(sql, (artist_name, ))
         values = cur.fetchall()
+        return len(values) != 0
+
+    except DatabaseError:
+        return False
+
+
+def get_songs(artist_name):
+    sql = """SELECT nome, data, historia 
+            FROM 
+            musica, musica_artista 
+            WHERE 
+            artista_id = (SELECT id FROM artista WHERE nome like '%s') 
+            and 
+            musica_id = id"""
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (artist_name,))
+        info = cur.fetchall()
     except DatabaseError as error:
-        print(error)
+        raise DatabaseError(error)
+    else:
+        return info
 
-    return values
 
-
-if __name__ == '__main__':
-    test = get_all()
-    print(test)
