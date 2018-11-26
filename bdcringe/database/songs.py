@@ -32,6 +32,20 @@ def search_name(music_name):
 
     return values
 
+def insert_new(name, date, history, genre, album, artist):
+    sql_new_music = """INSERT INTO musica(nome, data, historia, genero, album_nome) VALUES('%s', '%s', '%s', '%s', '%s')"""
+    sql = """INSERT INTO musica_artista(artista_id, musica_id) SELECT a.id, m.id FROM artista a, musica m WHERE a.nome like '%s' and m.nome like '%s'"""
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql_new_music, (name, date, history, genre, album))
+        cur.execute(sql, (name, artist))
+    except DatabaseError as error:
+        print(error)
+        return False
+    else:
+        return True
 
 if __name__ == '__main__':
     search_name('snoop')

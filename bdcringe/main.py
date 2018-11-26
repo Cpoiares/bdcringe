@@ -4,6 +4,8 @@ import bdcringe.database.songs as songs
 import bdcringe.database.albums as albums
 from psycopg2 import DatabaseError
 
+global conn
+global cur
 global online
 
 
@@ -16,21 +18,58 @@ def login():
     if user.login(username, password):
         print("Logged in!")
         online = True
+        main_menu()
+  
+  
+def register():
+    try:
+        sql = "INSERT INTO utilizador(username, password) values(%s, %s)"
+        user = input("Insert Username: ")
+        pw = input("Insert Password: ")
+        cur.execute(sql, (user, pw,))
+    except DatabaseError as error:
+        print("RIP REGISTER" + str(error))
+        register()
+    except(Exception, KeyboardInterrupt) as error:
+        print("Cancelling login\nGoing back to the first menu")
+        first_menu()
     else:
-        print("sqn.")
+        print("Logged in!")
+        online = True
+        main_menu()
 
 
 def register():
     global online
 
-    username = input("Username: ")
-    password = input("Password: ")
-
-    if user.register(username, password):
-        print("Account created!")
-        online = True
+    switch_dict = {
+        "0" : leave,
+        "1" : find_user
+    }
+    for key in switch_dict:
+        print(key, " -> ", switch_dict.get(key))
+    option = input("Enter valid option\n")
+    if option in switch_dict:
+        switch_dict[option]()
     else:
-        print("sqn.")
+        print("ENTER A VALID OPTION")
+        main_menu()
+
+
+def find_user():
+    try:
+        sql = "SELECT username, password FROM utilizador WHERE username = %s"
+        user = input("INSERT USERNAME TO SEARCH: ")
+        cur.execute(sql, (user,))
+    except DatabaseError as err:
+        print("FAILED TO SEARCH" + str(err))
+    except(Exception, KeyboardInterrupt) as err:
+        print(str(err))
+        main_menu()
+    else:
+        print("SUCESS! Found: ")
+        print(cur.fetchone())
+        main_menu()
 
 
 def main_menu():
@@ -84,6 +123,7 @@ def insert_song():
         while not artists.exists_artist(artist):
             artist = input("Nome do artista não encontrado!\nNome do artista:\n> ")
 
+        songs.insert_new(name, date, history, genre, album, artist)
         # sei lá o que criar primeiro ja pego nisto
     except KeyboardInterrupt as error:
         print("CNTRL+C -> Going back to main menu")
@@ -93,7 +133,7 @@ def insert_song():
 
 
 def leave():
-    print("kk.")
+    print("BYE")
     return
 
 
