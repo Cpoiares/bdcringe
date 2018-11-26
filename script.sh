@@ -6,6 +6,7 @@ if [[ "$1" == 'help' ]]; then
   echo -e "Basic usage: ./$SCRIPT init"\\n
 elif [[ "$1" == 'init' ]]; then
   docker run --name bd -p 5432:5432 -d postgres:alpine
+  sleep 5
   psql -h localhost -p 5432 -U postgres -f script.sql
 elif [[ "$1" == 'new' ]]; then
   docker run --name bd -p 5432:5432 -d postgres:alpine
