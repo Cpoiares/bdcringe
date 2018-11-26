@@ -17,17 +17,17 @@ def search_name(nome):
 
     return None
 
-def new_artist(artist_name, artist_db):
+def insert_artist(artist_name, artist_db):
     sql = """INSERT INTO artista(nome, data_nascimento) values(%s, %s);"""
     try:
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql, (artist_name, artist_db))
+        conn.commit()
     except DatabaseError as error:
         raise DatabaseError(error)
     else:
         pass
-
 
 def exists_artist(artist_name):
     sql = """SELECT * FROM artista WHERE nome like %s"""
