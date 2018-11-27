@@ -8,7 +8,7 @@ def insert(nome):
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql, (nome, ))
-        cur.commit()
+        conn.commit()
     except DatabaseError as error:
         print(error)
         return False
@@ -72,3 +72,16 @@ def delete(nome):
         return False
 
     return True
+
+
+def get_all():
+    sql = "SELECT * FROM editora"
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql)
+        return cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+        return False

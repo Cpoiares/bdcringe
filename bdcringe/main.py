@@ -27,7 +27,9 @@ def main_menu():
         3: insert_group,
         4: insert_song,
         5: insert_label,
-        6: list_artist_songs
+        6: list_artist_songs,
+        7: list_labels,
+        8: insert_label
     }
 
     option = 0
@@ -39,12 +41,30 @@ def main_menu():
         print("4. Inserir musica")
         print("5. Inserir editora")
         print("6. Listar musicas de um artista")
-        print("7. Sair")
+        print("7. Listar editoras")
+        print("8. Inserir editora")
+        print("9. Sair")
         option = int(input("> "))
         if (option >= 0) and (option < len(options) + 1):
             if option == len(options):
                 return
             options[option]()
+
+
+def list_labels():
+    values = labels.get_all()
+
+    for label in values:
+        print(label)
+
+
+def insert_label():
+    print("Inserir nova editora")
+    nome = input("Nome da editora")
+    if labels.insert(nome):
+        print("Sucess")
+    else:
+        print("Erro.")
 
 
 def search_artist():
@@ -136,8 +156,8 @@ def list_artist_songs():
 
     try:
         print(artists.get_songs(artista))
-    except DatabaseError as err:
-        print(err)
+    except DatabaseError as error:
+        print(error)
 
 
 def insert_song():
@@ -191,6 +211,7 @@ if __name__ == '__main__':
         if not online:
             print("Tente outra vez.")
         else:
+            print(chr(27) + "[2J") # clear
             main_menu()
             online = False
             leave = False
