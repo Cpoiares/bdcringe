@@ -44,7 +44,7 @@ def insert(nome, data, historia, genero, album, artist):
             ('%s', '%s', '%s', '%s', '%s')
     """
     sql_artista = """
-        INSERT 
+        INSERT
         INTO
             musica_artista
             (artista_id, musica_id)

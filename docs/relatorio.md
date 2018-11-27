@@ -89,7 +89,7 @@ WHERE
 Dado um nome de um artista é retornada toda a informação relativa ao artista em questão, retorna erro no caso do artista não existir.
 
 ```sql
-SELECT 
+SELECT
     * 
 FROM
     artista

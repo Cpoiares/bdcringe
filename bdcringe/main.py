@@ -6,33 +6,17 @@ import bdcringe.database.groups as groups
 import bdcringe.database.albuns as albuns
 from psycopg2 import DatabaseError
 
-global online
-
 
 def login():
-    global online
-
     username = input("Username: ")
     password = input("Password: ")
-
-    if user.login(username, password):
-        print("Logged in!")
-        online = True
-    else:
-        print("sqn.")
+    return user.login(username, password)
 
 
 def register():
-    global online
-
     username = input("Username: ")
     password = input("Password: ")
-
-    if user.register(username, password):
-        print("Account created!")
-        online = True
-    else:
-        print("sqn.")
+    return user.register(username, password)
 
 
 def main_menu():
@@ -55,8 +39,11 @@ def main_menu():
         print("4. Inserir musica")
         print("5. Inserir editora")
         print("6. Listar musicas de um artista")
+        print("7. Sair")
         option = int(input("> "))
-        if (option >= 0) and (option < len(options)):
+        if (option >= 0) and (option < len(options) + 1):
+            if option == len(options):
+                return
             options[option]()
 
 
@@ -91,7 +78,7 @@ def insert_artist():
 def insert_label():
     label = input("Introduza o nome da editora\n> ")
     try:
-        labels.insert_new(label)
+        labels.insert(label)
     except DatabaseError as error:
         print(error)
     else:
@@ -130,7 +117,7 @@ def insert_album():
         group = input("Introduza o grupo musical que gravou o album:\n> ")
 
     label = input("Introduza a editora que criou o album:\n> ")
-    while not labels.exists_label(label):
+    while not labels.exists(label):
         label = input("Introduza a editora que criou o album:\n> ")
     try:
         albuns.insert(name, date, group, label)
@@ -170,7 +157,7 @@ def insert_song():
         while not artists.exists(artista):
             artista = input("Nome do artista não encontrado!\nNome do artista:\n> ")
 
-        songs.insert_new(nome, data, historia, genre, album, artista)
+        songs.insert(nome, data, historia, genre, album, artista)
 
     except DatabaseError as error:
         print(error)
@@ -179,25 +166,31 @@ def insert_song():
         main_menu()
 
 
-def leave():
-    print("Adeuxito manito.")
-    exit(0)
-
-
 if __name__ == '__main__':
 
-    main_menu()
-    exit(0)
-
     online = False
-    print("1 - Register")
-    print("2 - Login")
-    print("3 - Leave")
-    option = input("> ")
+    leave = False
 
-    if option == '1':
-        register()
-    elif option == '2':
-        login()
-    elif option == '3':
-        leave()
+    while not online and not leave:
+        print("1 - Register")
+        print("2 - Login")
+        print("3 - Leave")
+        option = input("> ")
+
+        if option == '1':
+            online = register()
+        elif option == '2':
+            online = login()
+        elif option == '3':
+            leave = True
+
+        if leave:
+            print("Adeuxito manito")
+            exit(0)
+
+        if not online:
+            print("Tente outra vez.")
+        else:
+            main_menu()
+            online = False
+            leave = False

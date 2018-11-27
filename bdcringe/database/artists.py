@@ -72,7 +72,7 @@ def get_songs(artist_name):
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (artist_name,))
+        cur.execute(sql, (artist_name, ))
         info = cur.fetchall()
         return info
     except DatabaseError as error:

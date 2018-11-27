@@ -2,27 +2,73 @@ from psycopg2 import DatabaseError
 from bdcringe.database import Database
 
 
-def exists_label(label_name):
-    sql = """SELECT * FROM editora WHERE nome like %s"""
+def insert(nome):
+    sql = "INSERT INTO editora(nome) values(%s)"
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (label_name,))
+        cur.execute(sql, (nome, ))
+        cur.commit()
     except DatabaseError as error:
+        print(error)
         return False
-    else:
-        return True
+
+    return True
 
 
-def insert_new(label_name):
-    sql = """INSERT INTO editora(nome) VALUES(%s)"""
+def search(nome):
+    sql = "SELECT * FROM editora WHERE nome LIKE %(like)s ESCAPE '='"
+    values = None
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (label_name,))
-        conn.commit()
+        cur.execute(sql, (dict(like='%'+nome+'%')))
+        values = cur.fetchall()
     except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
+        print(error)
+
+    return values
+
+
+def exists(nome):
+    sql = "SELECT * FROM editora WHERE nome like %s"
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (nome, ))
+        values = cur.fetchall()
+        return len(values) != 0
+
+    except DatabaseError as error:
+        print(error)
         return False
 
+
+def update(antigo, novo):
+    sql = "UPDATE editora SET nome = %s WHERE nome LIKE %s"
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (novo, antigo))
+        cur.commit()
+    except DatabaseError as error:
+        print(error)
+        return False
+
+    return True
+
+
+def delete(nome):
+    sql = "DELETE FROM editora WHERE nome LIKE %s"
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (nome, ))
+        cur.commit()
+    except DatabaseError as error:
+        print(error)
+        return False
+
+    return True
