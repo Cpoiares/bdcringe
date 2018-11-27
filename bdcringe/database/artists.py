@@ -3,23 +3,20 @@ from bdcringe.database import Database
 
 
 def search(nome):
-    # FIXME: OLHA NAO SEI ESTA MERAD NAO QUER DAR COM %s
-    sql = "SELECT * FROM artista where nome like '%" + nome + "%'"
+    # https://stackoverflow.com/questions/2106207/escape-sql-like-value-for-postgres-with-psycopg2
+
+    sql = "SELECT * FROM artista where nome LIKE %(like)s ESCAPE '='"
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        # cur.execute(sql, (nome, ))
-        cur.execute(sql)
+        cur.execute(sql, (dict(like='%'+nome+'%')))
         values = cur.fetchall()
         return values
 
     except DatabaseError as error:
         print(error)
         return None
-    else:
-        return values
-
 
 
 def insert(nome, data_nascimento):
@@ -35,6 +32,7 @@ def insert(nome, data_nascimento):
         return False
 
     return True
+
 
 def exists(artist_name):
     sql = "SELECT * FROM artista WHERE nome like %s"
@@ -63,9 +61,13 @@ def get_songs(artist_name):
         cur = conn.cursor()
         cur.execute(sql, (artist_name,))
         info = cur.fetchall()
-    except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
         return info
+    except DatabaseError as error:
+        print(error)
+        return None
 
 
+if __name__ == '__main__':
+    res = search('boi')
+    for value in res:
+        print(value)
