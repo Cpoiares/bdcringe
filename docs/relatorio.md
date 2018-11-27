@@ -46,14 +46,14 @@ where
     username like %s and
     password like %s
 ```
-### Tornar Editor
+### Promover utilizador a editor
 ##### Procurar utilizador
 É feita uma listagem de todos os utilizadores na base de dados para tornar a procura mais fácil para o utilizador.
 ```sql
 SELECT nome
 FROM utilizador
 ```
-##### Tornar utilizador
+##### Tornar editor
 A partir do username introduzido pelo utilizador altera os seus privilégios de editor.
 ```sql
 UPDATE
