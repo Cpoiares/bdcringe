@@ -24,7 +24,7 @@ def exists(nome):
         cur = conn.cursor()
         cur.execute(sql, (nome,))
         values = cur.fetchall()
-        return values is not None
+        return len(values) != 0
 
     except DatabaseError as error:
         print(error)
@@ -58,44 +58,30 @@ def delete(nome):
         return False
     return True
 
-def search_album(album_name):
-    sql = """SELECT * FROM album WHERE nome like %s"""
+
+def insert(nome, lancamento, grupo_musical, editora):
+    sql = """
+    INSERT 
+    INTO
+        album
+        (nome, lancamento, editora_id, grupo_musical_nome)
+        SELECT
+            %s,
+            %s,
+            id,
+            %s 
+        FROM
+            editora
+        WHERE
+            nome like %s
+    """
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql,(album_name,))
-
-    except DatabaseError as error:
-        print(error)
-        return None
-    else:
-        values = cur.fetchall()
-        return values
-    pass
-
-
-def insert_new(name, date, group, label):
-    sql = """INSERT INTO album(nome, lancamento, editora_id, grupo_musical_nome) SELECT %s, %s, id, %s FROM editora WHERE nome like %s"""
-    try:
-        conn = Database.connect()
-        cur = conn.cursor()
-        cur.execute(sql, (name, date, group, label))
+        cur.execute(sql, (nome, lancamento, grupo_musical, editora))
         conn.commit()
     except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
-        return True
+        print(error)
+        return False
 
-
-def exists_album(album_name):
-    sql = """SELECT * FROM album WHERE nome like %s"""
-    try:
-        conn = Database.connect()
-        cur = conn.cursor()
-        cur.execute(sql,(album_name,))
-    except DatabaseError as error:
-        raise DatabaseError(error)
-    else:
-        values = cur.fetchall()
-        return values
-    pass
+    return True

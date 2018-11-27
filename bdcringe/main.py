@@ -75,8 +75,6 @@ def search_artist():
         option = input("> ")
 
 
-
-
 def insert_artist():
     print("Inserir novo artista...")
     name = input("Nome do artista a criar: ")
@@ -135,7 +133,7 @@ def insert_album():
     while not labels.exists_label(label):
         label = input("Introduza a editora que criou o album:\n> ")
     try:
-        albuns.insert_new(name, date, group, label)
+        albuns.insert(name, date, group, label)
     except DatabaseError as error:
         print(error)
     else:
@@ -164,7 +162,8 @@ def insert_song():
         genre = input("Genero da musica:\n> ")
 
         album = input("Nome do album:\n> ")
-        while albuns.search_album(album) is None:
+
+        while not albuns.exists(album):
             album = input("Nome do album:\n> ")
 
         artista = input("Nome do artista:\n> ")
@@ -178,6 +177,7 @@ def insert_song():
     else:
         print('Success')
         main_menu()
+
 
 def leave():
     print("Adeuxito manito.")
