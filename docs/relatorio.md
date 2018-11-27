@@ -96,6 +96,33 @@ FROM
 WHERE
     nome like '%s'
 ```
+
+
+### Listar as músicas de um artista
+
+Dado um nome de um artista, devolve todas as músicas dele
+
+```sql
+SELECT
+    nome,
+    data,
+    historia
+FROM
+    musica,
+    musica_artista
+WHERE
+    artista_id = (
+        SELECT
+            id 
+        FROM
+            artista 
+        WHERE
+            nome like '%s'
+    ) and
+    musica_id = id
+```
+
+
 ## Diagramas
 
 #### Conceptual

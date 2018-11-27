@@ -49,13 +49,26 @@ def exists(artist_name):
 
 
 def get_songs(artist_name):
-    sql = """SELECT nome, data, historia 
-            FROM 
-            musica, musica_artista 
-            WHERE 
-            artista_id = (SELECT id FROM artista WHERE nome like '%s') 
-            and 
-            musica_id = id"""
+    sql = """
+    SELECT
+        nome,
+        data,
+        historia              
+    FROM
+        musica,
+        musica_artista              
+    WHERE
+        artista_id = (
+            SELECT
+                id 
+            FROM
+                artista 
+            WHERE
+                nome like '%s'
+        ) and
+        musica_id = id
+    """
+
     try:
         conn = Database.connect()
         cur = conn.cursor()

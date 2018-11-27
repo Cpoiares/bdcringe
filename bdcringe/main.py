@@ -111,7 +111,7 @@ def insert_group():
 
     try:
         # cria um novo grupo e adiciona posteriormente
-        groups.insert_new(name, date_begin, date_end)
+        groups.insert(name, date_begin, date_end)
         groups.add_artist(artista, name)
     except DatabaseError as error:
         print(error)
@@ -126,7 +126,7 @@ def insert_album():
 
     group = input("Introduza o grupo musical que gravou o album:\n> ")
     # TODO: Confirmar grupos musicais e não artistas
-    while not groups.exists_group(group):
+    while not groups.exists(group):
         group = input("Introduza o grupo musical que gravou o album:\n> ")
 
     label = input("Introduza a editora que criou o album:\n> ")

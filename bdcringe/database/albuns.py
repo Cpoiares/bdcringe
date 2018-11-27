@@ -3,12 +3,12 @@ from bdcringe.database import Database
 
 
 def search(nome):
-    sql = "SELECT * FROM album WHERE nome like %%s%"
+    sql = "SELECT * FROM album WHERE nome like %(like)s ESCAPE '='"
     values = None
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (nome, ))
+        cur.execute(sql, (dict(like='%'+nome+'%')))
         values = cur.fetchall()
 
     except DatabaseError as error:
@@ -31,7 +31,7 @@ def exists(nome):
         return False
 
 
-def update(antigo, novo):
+def update_nome(antigo, novo):
     sql = "UPDATE album SET nome = %s WHERE nome like %s"
 
     try:
