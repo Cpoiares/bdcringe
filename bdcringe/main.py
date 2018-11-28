@@ -14,7 +14,6 @@ def login():
     password = input("Password: ")
     value = user.login(username, password)
     if value:
-        print(value)
         User.username = value[0]
         User.editor = value[1]
         return True

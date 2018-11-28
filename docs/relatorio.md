@@ -120,8 +120,10 @@ Nome: Roll
 0. Listar artistas do grupo.
 1. [E] Adicionar artista.
 2. [E] Adicionar albúm.
-3. Sair.
->
+3. [E] Adicionar concerto.
+4. Listar Concertos.
+5. Sair.
+> 
 ```
 
 <div class="page-break"></div>
