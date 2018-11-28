@@ -45,12 +45,13 @@ css: |-
 ## Table of Contents
 1. [Contactos](#Contactos)
 2. [Instalação](#Instalação)
-3. [Estrutura do código](#Estrutura)
-4. [Funcionalidades](#Funcionalidades)
+3. [Utilização](#Utilização)
+4. [Estrutura do código](#Estrutura)
+5. [Funcionalidades](#Funcionalidades)
     1. [Registo](#Registo)
     2. [Login](#Login)
     3. [Músicas](#Musicas)
-5. [Diagramas](#Diagramas)
+6. [Diagramas](#Diagramas)
     1. [Diagrama Conceptual](#Conceptual)
     2. [Diagrama Físico](#Físico)
 
