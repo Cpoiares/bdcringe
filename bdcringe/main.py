@@ -7,38 +7,6 @@ import bdcringe.database.albuns as albuns
 from psycopg2 import DatabaseError
 
 
-def main_menu():
-    options = {
-        0: search_artist,
-        1: insert_artist,
-        2: insert_album,
-        3: insert_group,
-        4: insert_song,
-        5: insert_label,
-        6: list_artist_songs,
-        7: list_labels,
-        8: insert_label
-    }
-
-    option = 0
-    while option != 1:
-        print("0. Procurar artista")
-        print("1. Inserir artista")
-        print("2. Inserir album")
-        print("3. Inserir grupo")
-        print("4. Inserir musica")
-        print("5. Inserir editora")
-        print("6. Listar musicas de um artista")
-        print("7. Listar editoras")
-        print("8. Inserir editora")
-        print("9. Sair")
-        option = int(input("> "))
-        if (option >= 0) and (option < len(options) + 1):
-            if option == len(options):
-                return
-            options[option]()
-
-
 def login():
     username = input("Username: ")
     password = input("Password: ")
@@ -174,12 +142,46 @@ def insert_song():
         main_menu()
 
 
+def main_menu():
+    options = {
+        0: search_artist,
+        1: insert_artist,
+        2: insert_album,
+        3: insert_group,
+        4: insert_song,
+        5: insert_label,
+        6: list_artist_songs,
+        7: list_labels,
+        8: insert_label
+    }
+
+    option = 0
+    while option != 1:
+        print(chr(27) + "[2J") # clear
+        print("0. Procurar artista")
+        print("1. Inserir artista")
+        print("2. Inserir album")
+        print("3. Inserir grupo")
+        print("4. Inserir musica")
+        print("5. Inserir editora")
+        print("6. Listar musicas de um artista")
+        print("7. Listar editoras")
+        print("8. Inserir editora")
+        print("9. Sair")
+        option = int(input("> "))
+        if (option >= 0) and (option < len(options) + 1):
+            if option == len(options):
+                return
+            options[option]()
+
+
 if __name__ == '__main__':
 
     online = False
     leave = False
 
     while not online and not leave:
+        print(chr(27) + "[2J") # clear
         print("1 - Register")
         print("2 - Login")
         print("3 - Leave")
@@ -199,7 +201,6 @@ if __name__ == '__main__':
         if not online:
             print("Tente outra vez.")
         else:
-            print(chr(27) + "[2J") # clear
             main_menu()
             online = False
             leave = False
