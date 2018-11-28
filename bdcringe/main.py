@@ -32,7 +32,6 @@ def register():
     return False
 
 
-
 def list_labels():
     values = labels.get_all()
 
@@ -58,9 +57,6 @@ def search_artist():
 
         for i, artista in enumerate(artistas):
             print("{0}. [{data}] : {nome}".format(i, nome=artista[1], data=artista[2]))
-
-        print("Mostrar detalhes de algum artista?")
-        option = input("> ")
 
 
 def insert_artist():
@@ -102,7 +98,6 @@ def main_menu():
 
     op = 0
     while op != len(options):
-        print(chr(27) + "[2J") # clear
         for i, option in enumerate(options):
             print("{}. {} {}".format(i, "[E]" if option[2] else '', option[1]))
         print(len(options),". Sair")
