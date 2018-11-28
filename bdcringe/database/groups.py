@@ -1,6 +1,10 @@
 from psycopg2 import DatabaseError
 from bdcringe.database import Database
 
+# nome      (varchar) PK
+# inicio    (date)
+# fim       (date)
+
 
 def exists(nome):
     sql = "SELECT * FROM grupo_musical WHERE nome like %s"
@@ -13,6 +17,20 @@ def exists(nome):
     except DatabaseError as error:
         print(error)
         return False
+
+
+def search(nome):
+    sql = "SELECT * FROM grupo_musical WHERE nome LIKE %(like)s ESCAPE '='"
+    value = []
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (dict(like='%'+nome+'%')))
+        value = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return value
 
 
 def members(nome):
@@ -40,7 +58,7 @@ def members(nome):
     return values
 
 
-def insert(name, date_begin, date_end):
+def insert(name, date_begin, date_end = None):
     sql = """
     INSERT
     INTO
@@ -49,6 +67,9 @@ def insert(name, date_begin, date_end):
     VALUES
         (%s, %s, %s)
     """
+
+    if date_end == '0':
+        date_end = None
 
     try:
         conn = Database.connect()
@@ -116,6 +137,21 @@ def add_artist(artist_name, group_name):
         return False
 
     return True
+
+
+def get_all():
+    sql = "SELECT * FROM grupo_musical"
+    values = []
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql)
+        values = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return values
 
 
 if __name__ == '__main__':

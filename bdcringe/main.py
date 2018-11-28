@@ -2,8 +2,10 @@ import bdcringe.database.user as user
 import bdcringe.database.artists as artists
 import bdcringe.database.songs as songs
 import bdcringe.database.labels as labels
-import bdcringe.database.groups as groups
 import bdcringe.database.albuns as albuns
+
+import bdcringe.menus.groups as groups
+
 from psycopg2 import DatabaseError
 
 
@@ -62,48 +64,6 @@ def insert_artist():
         main_menu()
 
 
-def insert_group():
-    name = input("Introduza o nome do grupo a introduzir:\n> ")
-    artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
-
-    while not artists.exists(artista):
-        artista = input("Introduza o nome do artista a introduzir no grupo\n> ")
-
-    date_begin = input("Introduza a data de criação do grupo:\n> ")
-    date_end = input("Introduza a data de fim do grupo: 0 caso de ainda estar ativo.\n> ")
-
-    try:
-        # cria um novo grupo e adiciona posteriormente
-        groups.insert(name, date_begin, date_end)
-        groups.add_artist(artista, name)
-    except DatabaseError as error:
-        print(error)
-    else:
-        print('Success')
-        main_menu()
-
-
-def insert_album():
-    name = input("INSERIR NOVO ALBUM\nIntroduza o nome do album a adicionar:\n> ")
-    date = input("Introduza a data de lançamento:\n> ")
-
-    group = input("Introduza o grupo musical que gravou o album:\n> ")
-    # TODO: Confirmar grupos musicais e não artistas
-    while not groups.exists(group):
-        group = input("Introduza o grupo musical que gravou o album:\n> ")
-
-    label = input("Introduza a editora que criou o album:\n> ")
-    while not labels.exists(label):
-        label = input("Introduza a editora que criou o album:\n> ")
-    try:
-        albuns.insert(name, date, group, label)
-    except DatabaseError as error:
-        print(error)
-    else:
-        print('Success')
-        main_menu()
-
-
 def list_artist_songs():
     artista = input("Introduza o nome do artista a procurar:\n> ")
 
@@ -146,33 +106,30 @@ def main_menu():
     options = {
         0: search_artist,
         1: insert_artist,
-        2: insert_album,
-        3: insert_group,
-        4: insert_song,
-        5: insert_label,
-        6: list_artist_songs,
-        7: list_labels,
-        8: insert_label
+        2: groups.menu,
+        3: insert_song,
+        4: insert_label,
+        5: list_artist_songs,
+        6: list_labels,
+        7: insert_label
     }
 
     option = 0
-    while option != 1:
+    while option != len(options):
         print(chr(27) + "[2J") # clear
         print("0. Procurar artista")
         print("1. Inserir artista")
-        print("2. Inserir album")
-        print("3. Inserir grupo")
-        print("4. Inserir musica")
-        print("5. Inserir editora")
-        print("6. Listar musicas de um artista")
-        print("7. Listar editoras")
-        print("8. Inserir editora")
-        print("9. Sair")
+        print("2. Gestão de grupos")
+        print("3. Inserir musica")
+        print("4. Inserir editora")
+        print("5. Listar musicas de um artista")
+        print("6. Listar editoras")
+        print("7. Inserir editora")
+        print("8. Sair")
         option = int(input("> "))
         if (option >= 0) and (option < len(options) + 1):
-            if option == len(options):
-                return
-            options[option]()
+            if option != len(options):
+                options[option]()
 
 
 if __name__ == '__main__':
