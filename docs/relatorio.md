@@ -11,13 +11,28 @@
 
 ## Table of Contents
 1. [Contactos](#Contactos)
-2. [Funcionalidades](#Funcionalidades)
+2. [Instalação](#Instalação)
+3. [Funcionalidades](#Funcionalidades)
     1. [Registo](#Registo)
     2. [Login](#Login)
     3. [Músicas](#Musicas)
-3. [Diagramas](#Diagramas)
+4. [Diagramas](#Diagramas)
     1. [Diagrama Conceptual](#Conceptual)
     2. [Diagrama Físico](#Físico)
+
+
+## Instalação
+O projeto foi feito para python 3.
+
+A configuração da ligação com a base de dados está definida em `config.py`
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+$ python3 -m bdcringe.main
+````
+
 
 ## Funcionalidades
 
