@@ -67,13 +67,11 @@ def insert_artist():
     print("Inserir novo artista...")
     name = input("Nome do artista a criar: ")
     data = input("Data de nascimento do artista (aaa-mm-dd): ")
-    try:
-        artists.insert(name, data)
-    except DatabaseError as error:
-        print(error)
+
+    if artists.insert(name, data):
+        print("Sucesso.")
     else:
-        print("Success.\nBack to main menu.")
-        main_menu()
+        print("Erro.")
 
 
 def list_artist_songs():
