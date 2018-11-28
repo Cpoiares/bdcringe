@@ -83,6 +83,46 @@ def insert(name, date_begin, date_end = None):
     return True
 
 
+def add_show(address, date, group_name):
+    sql = """INSERT INTO concerto(data, morada, grupo_musical_nome) VALUES(%s,%s,%s)"""
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (date, address, group_name))
+        conn.commit()
+        return True
+    except DatabaseError as error:
+        print(error)
+        return False
+
+
+def list_shows(group_name):
+    sql = "SELECT data, morada FROM concerto WHERE concerto.grupo_musical_nome like %s"
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (group_name,))
+        values = cur.fetchall()
+        return values
+    except DatabaseError as error:
+        print(error)
+
+
+def get_all():
+    sql = "SELECT * FROM grupo_musical"
+    values = []
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql)
+        values = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return values
+
+
 def add_artist_id(artist_id, group_name):
     sql = """
     INSERT
@@ -139,19 +179,7 @@ def add_artist(artist_name, group_name):
     return True
 
 
-def get_all():
-    sql = "SELECT * FROM grupo_musical"
-    values = []
 
-    try:
-        conn = Database.connect()
-        cur = conn.cursor()
-        cur.execute(sql)
-        values = cur.fetchall()
-    except DatabaseError as error:
-        print(error)
-
-    return values
 
 
 if __name__ == '__main__':

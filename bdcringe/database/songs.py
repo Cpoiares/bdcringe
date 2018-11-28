@@ -115,5 +115,20 @@ def letra(musica, compositor, texto):
     return True
 
 
+def get_all():
+    sql = "SELECT * FROM musica"
+    values = []
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql)
+        values = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return values
+
+
 if __name__ == '__main__':
     search_name('snoop')
