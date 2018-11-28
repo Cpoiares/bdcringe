@@ -12,6 +12,7 @@ def menu():
         (list_all, "Listar grupos.", False),
         (insert, "Inserir novo grupo.", True),
         (search, "Procurar grupo.", False)
+
     ]
 
     op = 0
@@ -66,11 +67,13 @@ def search():
     if (option >= 0) and (option < len(grupos)):
         nome_grupo = grupos[option][0]
         op = '0'
-        while op != '3':
+        while op != '5':
             print("0. Listar artistas do grupo.")
             print("1. [E] Adicionar artista.")
             print("2. [E] Adicionar albúm.")
-            print("3. Sair.")
+            print("3. [E] Adicionar concerto.")
+            print("4. Listar Concertos.")
+            print("5. Sair.")
             op = input("> ")
 
             if op == '1' and User.editor:
@@ -101,3 +104,14 @@ def search():
                     print("Sucesso.")
                 else:
                     print("Erro.")
+            elif op == '3' and User.editor:
+                address = input("Introduza a morada do concerto:\n")
+                date = input("Introduza a data do concerto: (aaaa-mm-dd)\n")
+                if groups.add_show(address, date, nome_grupo):
+                    print('Sucesso.')
+                else:
+                    print('Erro.')
+            elif op == '4':
+                values = groups.list_shows(nome_grupo)
+                if values is not None:
+                    print(values)

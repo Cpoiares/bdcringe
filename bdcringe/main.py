@@ -4,6 +4,7 @@ import bdcringe.database.artists as artists
 import bdcringe.database.labels as labels
 import bdcringe.menus.groups as groups
 import bdcringe.menus.albums as albums
+import bdcringe.menus.playlists as playlists
 
 from psycopg2 import DatabaseError
 
@@ -93,9 +94,11 @@ def main_menu():
         (insert_artist, "Inserir Artista.", True),
         (groups.menu, "Gestão de grupos.", False),
         (albums.menu, "Gestão de albuns.", False),
+        (playlists.menu, "Gestão de playlists.", False),
         (insert_label, "Inserir editora.", True),
         (list_artist_songs, "Listar musicas de um artista.", False),
         (list_labels, "Listar editoras.", False),
+        (playlists.menu, "Gestão de playlists", False),
         (make_editor, "Tornar editor.", True),
     ]
 
