@@ -61,6 +61,8 @@ O projeto foi feito para python 3.
 
 A configuração da ligação com a base de dados está definida em `config.py`
 
+Instruções para correr o projecto. O único módulo externo utilizado é o `psycopg2` para a comunicação com a base de dados Postgresql.
+
 ```bash
 $ python3 -m venv venv
 $ source venv/bin/activate
@@ -70,6 +72,83 @@ $ python3 -m bdcringe.main
 
 <div class="page-break"></div>
 
+## Utilização
+
+### Menu de Login / Registo de conta
+
+```
+1. Register
+2. Login
+3. Leave
+> 
+```
+
+### Menu Principal
+
+As opções marcadas com `[E]` estão restritas a utilizadores com privilégios de editor.
+
+```
+0. [E] Inserir editora.
+1. [E] Tornar editor.
+2. [E] Inserir Artista.
+3. Gestão de grupos musicais.
+4. Gestão de albuns.
+5. Procurar artista.
+6. Listar musicas de um artista.
+7. Listar editoras.
+8. Sair
+> 
+```
+
+### Menu de gestão de grupos músicais
+
+Como um albúm tem que estar necessariamente associado a um grupo musical, a inserção
+de um novo albúm é feito após pesquisa e seleçao de um grupo musical.
+
+```
+Gestão de grupos
+0. Listar grupos.
+1. [E] Inserir novo grupo.
+2. Procurar grupo.
+3. Sair
+> 2
+Procurar grupo.
+Nome: Roll
+0. (2010-01-02 até 2010-10-01) Rolling Stones
+1. Sair
+> 0
+0. Listar artistas do grupo.
+1. [E] Adicionar artista.
+2. [E] Adicionar albúm.
+3. Sair.
+>
+```
+
+<div class="page-break"></div>
+
+### Menu de gestão de albuns
+
+```
+Gestão de albums.
+
+0. Listar albums.
+1. Procurar album.
+2. Sair
+> 1
+Procurar album.
+Nome: Dark
+0. Pink Floyd - Dark Side of the Moon
+1. Sair
+> 0
+0. Listar musicas.
+1. [E] Adicionar musica.
+2. Escrever critica.
+3. Listar criticas.
+4. Sair.
+>
+```
+
+<div class="page-break"></div>
 
 ## Estrutura
 
