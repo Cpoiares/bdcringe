@@ -72,5 +72,27 @@ def insert(nome, data, historia, genero, album, artist):
     return True
 
 
+def insert_song(nome, data, historia, genero, album):
+    sql_musica = """
+        INSERT 
+        INTO
+            musica
+            (nome, data, historia, genero, album_nome) 
+        VALUES
+            (%s, %s, %s, %s, %s)
+    """
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql_musica, (nome, data, historia, genero, album))
+        conn.commit()
+    except DatabaseError as error:
+        print(error)
+        return False
+
+    return True
+
+
 if __name__ == '__main__':
     search_name('snoop')

@@ -2,28 +2,31 @@ import bdcringe.database.artists as artists
 import bdcringe.database.groups as groups
 import bdcringe.database.albums as albums
 import bdcringe.database.labels as labels
+from bdcringe import User
 
 
 def menu():
     print("Gestão de grupos")
 
-    options = {
-        0: list_all,
-        1: insert,
-        2: search
-    }
+    options = [
+        (list_all, "Listar grupos.", False),
+        (insert, "Inserir novo grupo.", True),
+        (search, "Procurar grupo.", False)
+    ]
 
-    option = 0
-    while option != len(options):
+    op = 0
+    while op != len(options):
         print(chr(27) + "[2J") # clear
-        print("0. Listar grupos.")
-        print("1. Inserir novo grupo.")
-        print("2. Procurar grupo.")
-        print("3. Sair")
-        option = int(input("> "))
-        if (option >= 0) and (option < len(options) + 1):
-            if option != len(options):
-                options[option]()
+        for i, option in enumerate(options):
+            print("{0}. {1} {3}".format(i, "[E]" if option[2] else "   ", *option))
+        print(len(options),". Sair")
+
+        op = int(input("> "))
+        if (op >= 0) and (op < len(options)):
+            if options[op][2] and not User.editor:
+                print("Nao tem permissoes de editor.")
+            else:
+                options[op][0]()
 
 
 def list_all():
@@ -41,7 +44,7 @@ def insert():
     date_end = input("Data de fim do grupo ('0' no caso de ainda esteja ativo):  ")
 
     if groups.insert(name, date_begin, date_end):
-        print('Success')
+        print("Success")
     else:
         print("Erro.")
 
@@ -66,12 +69,12 @@ def search():
         op = '0'
         while op != '3':
             print("0. Listar artistas do grupo.")
-            print("1. Adicionar artista.")
-            print("2. Adicionar albúm.")
+            print("1. [E] Adicionar artista.")
+            print("2. [E] Adicionar albúm.")
             print("3. Sair.")
             op = input("> ")
 
-            if op == '1':
+            if op == '1' and User.editor:
                 artista = input("Nome do artista a inserir no grupo: ")
 
                 while not artists.exists(artista):
@@ -85,7 +88,7 @@ def search():
                 artistas = groups.members(nome_grupo)
                 for x in artistas:
                     print(x)
-            elif op == '2':
+            elif op == '2' and User.editor:
                 nome_album = input("Nome do novo album: ")
                 data_lancamento = input("Data de lancamento (yyyy-mm-dd): ")
                 nome_editora = input("Nome da editora: ")

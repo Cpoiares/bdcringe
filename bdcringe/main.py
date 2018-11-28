@@ -1,10 +1,9 @@
+from bdcringe import User
 import bdcringe.database.user as user
 import bdcringe.database.artists as artists
-import bdcringe.database.songs as songs
 import bdcringe.database.labels as labels
-import bdcringe.database.albums as albums
-
 import bdcringe.menus.groups as groups
+import bdcringe.menus.albums as albums
 
 from psycopg2 import DatabaseError
 
@@ -12,13 +11,25 @@ from psycopg2 import DatabaseError
 def login():
     username = input("Username: ")
     password = input("Password: ")
-    return user.login(username, password)
+    value = user.login(username, password)
+    if value:
+        print(value)
+        User.username = value[0]
+        User.editor = value[1]
+        return True
+    return False
 
 
 def register():
     username = input("Username: ")
     password = input("Password: ")
-    return user.register(username, password)
+    value = user.register(username, password)
+    if value:
+        User.username = value[0]
+        User.editor = value[1]
+        return True
+    return False
+
 
 
 def list_labels():
@@ -76,67 +87,65 @@ def list_artist_songs():
         print(error)
 
 
-def insert_song():
-    try:
-        print("INSERIR NOVA MUSICA\nIntroduza o nome da musica:\n")
-        nome = input("> ")
-        data = input("Data da musica:\n> ")
-        historia = input("Breve história da música:\n> ")
-        genre = input("Genero da musica:\n> ")
-
-        album = input("Nome do album:\n> ")
-
-        while not albums.exists(album):
-            album = input("Nome do album:\n> ")
-
-        artista = input("Nome do artista:\n> ")
-        while not artists.exists(artista):
-            artista = input("Nome do artista não encontrado!\nNome do artista:\n> ")
-
-        songs.insert(nome, data, historia, genre, album, artista)
-
-    except DatabaseError as error:
-        print(error)
-    else:
-        print('Success')
-        main_menu()
-
-
 def main_menu():
     options = [
-        (search_artist, "Procurar artista"),
-        (insert_artist, "Inserir Artista"),
-        (groups.menu, "Gestão de grupos."),
-        (insert_song, "Inserir musica."),
-        (insert_label, "Inserir editora"),
-        (list_artist_songs, "Listar musicas de um artista"),
-        (list_labels, "Listar editoras"),
+        (search_artist, "Procurar artista.", False),
+        (insert_artist, "Inserir Artista.", True),
+        (groups.menu, "Gestão de grupos.", False),
+        (albums.menu, "Gestão de albuns.", False),
+        (insert_label, "Inserir editora.", True),
+        (list_artist_songs, "Listar musicas de um artista.", False),
+        (list_labels, "Listar editoras.", False),
+        (make_editor, "Tornar editor.", True),
     ]
+
+    print(User.username)
+    print(User.editor)
 
     op = 0
     while op != len(options):
         print(chr(27) + "[2J") # clear
         for i, option in enumerate(options):
-            print("{0}. {2}".format(i, *option))
-
-        print(str(len(options)) + ". Sair")
+            print("{}. {} {}".format(i, "[E]" if option[2] else '', option[1]))
+        print(len(options),". Sair")
 
         op = int(input("> "))
-        if (op >= 0) and (op < len(options) + 1):
-            if op != len(options):
+        if (op >= 0) and (op < len(options)):
+            if options[op][2] and not User.editor:
+                print("Nao tem permissoes de editor.")
+            else:
                 options[op][0]()
 
 
-if __name__ == '__main__':
+def make_editor():
+    print("Procurar utilizador.")
+    username = input("Nome: ")
+    users = user.find_user(username)
 
-    online = False
+    for i, v in enumerate(users):
+        print("{}. {}".format(i, v[0]))
+
+    print("{}. Sair".format(len(users)))
+
+    op = int(input("> "))
+    if (op >= 0) and (op < len(users)):
+        username = users[op][0]
+
+        if user.make_editor(username):
+            print("Sucesso.")
+        else:
+            print("Erro.")
+
+
+if __name__ == '__main__':
     leave = False
+    online = False
 
     while not online and not leave:
         print(chr(27) + "[2J") # clear
-        print("1 - Register")
-        print("2 - Login")
-        print("3 - Leave")
+        print("1. Register")
+        print("2. Login")
+        print("3. Leave")
         option = input("> ")
 
         if option == '1':

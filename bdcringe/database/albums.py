@@ -100,3 +100,67 @@ def get_all():
         print(error)
 
     return values
+
+
+def songs(nome):
+    sql = """
+        select
+            *
+        from
+            musica
+        where
+            album_nome like %s
+    """
+    values = []
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (nome, ))
+        values = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return values
+
+
+def review(nome, pontuacao, justificacao, username):
+    sql = """
+    insert
+    into
+        critica
+        (album_nome, utilizador_username, pontuacao, justificacao)
+    values
+        (%s, %s, %s, %s)
+    """
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (nome, username, pontuacao, justificacao))
+        conn.commit()
+    except DatabaseError as error:
+        print(error)
+        return False
+    return True
+
+
+def reviews(nome):
+    sql = """
+    select
+        pontuacao, justificacao, utilizador_username
+    from
+        critica
+    where
+        album_nome like %s
+    """
+    values = []
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (nome, ))
+        values = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return values

@@ -3,34 +3,35 @@ from bdcringe.database import Database
 
 
 def login(username, password):
-    sql = "SELECT * FROM utilizador where username like %s and password like %s"
+    sql = "SELECT username, editor FROM utilizador where username like %s and password like %s"
+    value = None
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql, (username, password))
-        values = cur.fetchone()
-
-        return values is not None
+        value = cur.fetchone()
 
     except DatabaseError as error:
         print(error)
-        return False
+
+    return value
 
 
 def register(username, password):
-    sql = "INSERT INTO utilizador(username, password) values(%s, %s)"
+    sql = "INSERT INTO utilizador(username, password) values(%s, %s) RETURNING username, editor"
+    value = None
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql, (username, password))
+        value = cur.fetchone()
         conn.commit()
     except DatabaseError as error:
         print(error)
-        return False
 
-    return True
+    return value
 
 
 def get_all():
@@ -49,7 +50,7 @@ def get_all():
 
 
 def make_editor(username):
-    sql = "UPDATE utilizador SET editor = true WHERE username like '%s'"
+    sql = "UPDATE utilizador SET editor = true WHERE username like %s"
 
     try:
         conn = Database.connect()
@@ -63,15 +64,15 @@ def make_editor(username):
 
 
 def find_user(username):
-    sql = "SELECT username FROM utilizador WHERE username LIKE %s"
-    user = None
+    sql = "SELECT username, editor FROM utilizador WHERE username LIKE %s and editor = false"
+    values = []
 
     try:
         conn = Database.connect()
         cur = conn.cursor()
         cur.execute(sql, (username,))
-        user = cur.fetchone()
+        values = cur.fetchall()
     except DatabaseError as error:
         print(error)
 
-    return user
+    return values
