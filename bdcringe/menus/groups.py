@@ -16,7 +16,6 @@ def menu():
 
     op = 0
     while op != len(options):
-        print(chr(27) + "[2J") # clear
         for i, option in enumerate(options):
             print("{0}. {1} {3}".format(i, "[E]" if option[2] else "   ", *option))
         print(len(options),". Sair")
@@ -84,10 +83,12 @@ def search():
                     print("Sucesso.")
                 else:
                     print("Erro")
+
             elif op == '0':
                 artistas = groups.members(nome_grupo)
                 for x in artistas:
                     print(x)
+
             elif op == '2' and User.editor:
                 nome_album = input("Nome do novo album: ")
                 data_lancamento = input("Data de lancamento (yyyy-mm-dd): ")

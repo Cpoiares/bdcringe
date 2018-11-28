@@ -159,3 +159,4 @@ if __name__ == '__main__':
     print(add_artist("yaboi", "Jessica Password Megane"))
     print(exists("Jessica Password Megane"))
     print(members("Jessica Password Megane"))
+    print(get_all())
