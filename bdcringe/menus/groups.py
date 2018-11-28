@@ -1,6 +1,6 @@
 import bdcringe.database.artists as artists
 import bdcringe.database.groups as groups
-import bdcringe.database.albuns as albuns
+import bdcringe.database.albums as albums
 import bdcringe.database.labels as labels
 
 
@@ -93,7 +93,7 @@ def search():
                 while not labels.exists(nome_editora):
                     nome_editora = input("Nome da editora: ")
 
-                if albuns.insert(nome_album, data_lancamento, nome_grupo, nome_editora):
+                if albums.insert(nome_album, data_lancamento, nome_grupo, nome_editora):
                     print("Sucesso.")
                 else:
                     print("Erro.")

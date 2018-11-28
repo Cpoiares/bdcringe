@@ -2,7 +2,7 @@ import bdcringe.database.user as user
 import bdcringe.database.artists as artists
 import bdcringe.database.songs as songs
 import bdcringe.database.labels as labels
-import bdcringe.database.albuns as albuns
+import bdcringe.database.albums as albums
 
 import bdcringe.menus.groups as groups
 
@@ -86,7 +86,7 @@ def insert_song():
 
         album = input("Nome do album:\n> ")
 
-        while not albuns.exists(album):
+        while not albums.exists(album):
             album = input("Nome do album:\n> ")
 
         artista = input("Nome do artista:\n> ")
@@ -103,33 +103,28 @@ def insert_song():
 
 
 def main_menu():
-    options = {
-        0: search_artist,
-        1: insert_artist,
-        2: groups.menu,
-        3: insert_song,
-        4: insert_label,
-        5: list_artist_songs,
-        6: list_labels,
-        7: insert_label
-    }
+    options = [
+        (search_artist, "Procurar artista"),
+        (insert_artist, "Inserir Artista"),
+        (groups.menu, "Gestão de grupos."),
+        (insert_song, "Inserir musica."),
+        (insert_label, "Inserir editora"),
+        (list_artist_songs, "Listar musicas de um artista"),
+        (list_labels, "Listar editoras"),
+    ]
 
-    option = 0
-    while option != len(options):
+    op = 0
+    while op != len(options):
         print(chr(27) + "[2J") # clear
-        print("0. Procurar artista")
-        print("1. Inserir artista")
-        print("2. Gestão de grupos")
-        print("3. Inserir musica")
-        print("4. Inserir editora")
-        print("5. Listar musicas de um artista")
-        print("6. Listar editoras")
-        print("7. Inserir editora")
-        print("8. Sair")
-        option = int(input("> "))
-        if (option >= 0) and (option < len(options) + 1):
-            if option != len(options):
-                options[option]()
+        for i, option in enumerate(options):
+            print("{0}. {2}".format(i, *option))
+
+        print(str(len(options)) + ". Sair")
+
+        op = int(input("> "))
+        if (op >= 0) and (op < len(options) + 1):
+            if op != len(options):
+                options[op][0]()
 
 
 if __name__ == '__main__':

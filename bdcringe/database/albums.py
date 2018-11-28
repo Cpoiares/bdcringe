@@ -85,3 +85,18 @@ def insert(nome, lancamento, grupo_musical, editora):
         return False
 
     return True
+
+
+def get_all():
+    sql = "select * from album"
+    values = []
+
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql)
+        values = cur.fetchall()
+    except DatabaseError as error:
+        print(error)
+
+    return values
