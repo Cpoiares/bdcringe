@@ -1,12 +1,13 @@
 ---
 stylesheet: https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css
 body_class: markdown-body
-highlight_style: atom-one-dark
 displayHeaderFooter: true
 pdf_options:
   format: A4
   margin: 30mm 20mm
   displayHeaderFooter: true
+  printBackground: true
+  highlight_style: darkula
   headerTemplate: |-
     <style>
       section {
@@ -44,16 +45,18 @@ css: |-
 ## Table of Contents
 1. [Contactos](#Contactos)
 2. [Instalação](#Instalação)
-3. [Funcionalidades](#Funcionalidades)
+3. [Estrutura do código](#Estrutura)
+4. [Funcionalidades](#Funcionalidades)
     1. [Registo](#Registo)
     2. [Login](#Login)
     3. [Músicas](#Musicas)
-4. [Diagramas](#Diagramas)
+5. [Diagramas](#Diagramas)
     1. [Diagrama Conceptual](#Conceptual)
     2. [Diagrama Físico](#Físico)
 
 
 ## Instalação
+
 O projeto foi feito para python 3.
 
 A configuração da ligação com a base de dados está definida em `config.py`
@@ -67,6 +70,39 @@ $ python3 -m bdcringe.main
 
 <div class="page-break"></div>
 
+
+## Estrutura
+
+O código da aplicação foi separado em 2 modulos python principais `database` e `menus`.
+
+O módulo `database` contém vários submodulos que servem camada de abstração entre a interface do utilizador e o sql
+utilizado para as operações com a base de dados.
+
+O módulo `menus` contém os menus para a interface de linha de comandos
+
+Esta estrutura torna a transição para uma interface gráfica mais fácil.
+
+```bash
+├── __init__.py
+├── config.py
+├── main.py
+├── database
+│   ├── __init__.py
+│   ├── albums.py
+│   ├── artists.py
+│   ├── groups.py
+│   ├── labels.py
+│   ├── playlists.py
+│   ├── songs.py
+│   └── user.py
+└── menus
+    ├── __init__.py
+    ├── albums.py
+    └── groups.py
+```
+
+<div class="page-break"></div>
+
 ## Funcionalidades
 
 ### Registo
@@ -74,6 +110,8 @@ $ python3 -m bdcringe.main
 Insere na base de dados um novo utilizador com o username e password fornecidos.
 Dá erro de inserção caso já exista algum utilizador com o mesmo username devido ao campo `username`
 servir de chave primária (unique).
+
+`bdcringe.database.user.register(username, password)`
 
 ```sql
 INSERT
@@ -87,6 +125,8 @@ returning
 ```
 
 ### Login
+
+`bdcringe.database.user.login(username, password)`
 
 Dado um nome e password de um utilizador, verifica se existe na base de dados.
 ```sql
@@ -109,6 +149,8 @@ Para promover outro utilizador a editor são necessárias duas operações, uma 
 
 É feita uma listagem de utilizadores sem permissoes de editor com base no nome a procurar para tornar a procura mais fácil para o utilizador.
 
+`bdcringe.database.user.search(username)`
+
 ```sql
 SELECT
     nome
@@ -119,8 +161,12 @@ WHERE
     editor = false
 ```
 
+
 ##### Tornar editor
 A partir do username introduzido pelo utilizador altera os seus privilégios de editor.
+
+`bdcringe.database.user.make_editor(username)`
+
 ```sql
 UPDATE
    utilizador 
@@ -136,6 +182,8 @@ WHERE
 
 Dado um nome de um artista é retornada toda a informação relativa ao artista em questão, retorna erro no caso do artista não existir.
 
+`bdcringe.database.artists.search(nome)`
+
 ```sql
 SELECT
     * 
@@ -148,6 +196,8 @@ WHERE
 ### Listar as músicas de um Artista
 
 Dado um nome de um artista, devolve todas as músicas dele
+
+`bdcringe.database.artists.get_songs(nome)`
 
 ```sql
 SELECT
@@ -173,9 +223,11 @@ WHERE
 
 ### Inserir um Album
 
-[comment]: <>  "Definir o que é uma data válida para todos os dados date"
 Dado um nome, uma data de lançamento válida, um nome de grupo musical e o nome da editora correspondente, insere um novo album.
 O id da editora é obtido através de uma subconsulta.
+
+`bdcringe.database.albums.insert(nome, lancamento, grupo_musical, editora)`
+
 ```sql
 INSERT
     INTO
@@ -195,6 +247,8 @@ INSERT
 ### Procura de um Album
 Dado um nome de um album devolve toda a sua informação.
 
+`bdcringe.database.albums.search(nome)`
+
 ```sql
 SELECT
     *
@@ -208,6 +262,8 @@ WHERE
 
 Dado um nome original e um novo nome, procura e altera o album.
 
+`bdcringe.database.albums.update_nome(antigo, novo)`
+
 ```sql
 UPDATE
     album
@@ -217,9 +273,13 @@ WHERE
     nome LIKE %s
 ```
 
+<div class="page-break"></div>
+
 ### Apagar um album
 
 Dado o nome de um album, remove-o da base de dados.
+
+`bdcringe.database.albums.delete(nome)`
 
 ```sql
 DELETE
@@ -228,6 +288,23 @@ DELETE
     WHERE
         nome LIKE %s
 ```
+
+### Listar músicas de um album
+
+
+Dado um nome de um album, devolve todas as músicas a que ele pertencem.
+
+`bdcringe.database.albums.songs(nome)`
+
+```sql
+SELECT
+    *
+FROM
+    musica
+WHERE
+    album_nome LIKE %s
+```
+
 
 <div class="page-break"></div>
 
@@ -238,6 +315,8 @@ DELETE
 
 É pedido ao utilizador uma pontuaçao e uma justificação textual para essa pontuação e é registada na tabela de críticas.
 
+`bdcringe.database.albums.review(nome, pontuacao, justificacao, username)`
+
 ```sql
 INSERT
     INTO
@@ -247,11 +326,28 @@ INSERT
         (%s, %s, %s, %s)
 ```
 
+### Mostrar todas as críticas de um album
+
+Dado um nome de um album, mostra todas as suas críticas.
+
+`bdcringe.database.albums.reviews(nome)`
+
+```sql
+select
+    pontuacao, justificacao, utilizador_username
+from
+    critica
+where
+    album_nome like %s
+```
+
 <div class="page-break"></div>
 
 ### Inserir Editora
 
 Dado um nome, insere uma nova editora na base de dados.
+
+`bdcringe.database.labels.insert(nome)`
 
 ```sql
 INSERT
@@ -265,6 +361,9 @@ INSERT
 ### Procurar Editora
 
 Dado um nome devolve toda a informação relativa a essa editora.
+
+`bdcringe.database.labels.search(nome)`
+
 ```sql
 SELECT
     *
@@ -277,6 +376,8 @@ WHERE
 ### Alterar o nome de uma editora
 
 Dado um nome original e um novo nome, procura e altera a editora.
+
+`bdcringe.database.labels.update(antigo, novo)`
 
 ```sql
 UPDATE
@@ -291,6 +392,8 @@ WHERE
 
 Dado o nome de um album, remove-o da base de dados.
 
+`bdcringe.database.labels.delete(nome)`
+
 ```sql
 DELETE
 FROM
@@ -298,6 +401,20 @@ FROM
 WHERE
     nome LIKE %s
 ```
+
+### Listar editoras
+
+Lista todas a editoras existentes.
+
+`bdcringe.database.labels.get_all()`
+
+```sql
+SELECT
+    *
+FROM
+    editora
+```
+
 
 ### Inserir Grupo Musical
 Dado um nome, data de inicio e data de fim, insere um novo grupo musical.
