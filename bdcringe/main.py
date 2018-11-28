@@ -14,7 +14,6 @@ def login():
     password = input("Password: ")
     value = user.login(username, password)
     if value:
-        print(value)
         User.username = value[0]
         User.editor = value[1]
         return True
@@ -30,7 +29,6 @@ def register():
         User.editor = value[1]
         return True
     return False
-
 
 
 def list_labels():
@@ -59,21 +57,16 @@ def search_artist():
         for i, artista in enumerate(artistas):
             print("{0}. [{data}] : {nome}".format(i, nome=artista[1], data=artista[2]))
 
-        print("Mostrar detalhes de algum artista?")
-        option = input("> ")
-
 
 def insert_artist():
     print("Inserir novo artista...")
     name = input("Nome do artista a criar: ")
     data = input("Data de nascimento do artista (aaa-mm-dd): ")
-    try:
-        artists.insert(name, data)
-    except DatabaseError as error:
-        print(error)
+
+    if artists.insert(name, data):
+        print("Sucesso.")
     else:
-        print("Success.\nBack to main menu.")
-        main_menu()
+        print("Erro.")
 
 
 def list_artist_songs():
@@ -104,7 +97,6 @@ def main_menu():
 
     op = 0
     while op != len(options):
-        print(chr(27) + "[2J") # clear
         for i, option in enumerate(options):
             print("{}. {} {}".format(i, "[E]" if option[2] else '', option[1]))
         print(len(options),". Sair")
