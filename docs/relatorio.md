@@ -529,7 +529,30 @@ INSERT
         WHERE
             nome like %s
 ```
+### Adiciona Concerto 
+Dado uma morada do concerto, uma data e o nome do grupo musical em questão, adiciona um novo concerto.
+`bdcringe.database.groups.add_show(address, date, group_name)`
 
+```sql
+INSERT 
+    INTO 
+      concerto
+      (data, morada, grupo_musical_nome) 
+      VALUES
+      (%s,%s,%s)
+```
+
+### Listar Concertos 
+Dado o nome de um grupo musical, lista todos os seus concertos.
+`bdcringe.database.groups.list_shows(group_name)`
+```sql
+SELECT 
+    data, morada 
+FROM 
+    concerto 
+WHERE 
+    concerto.grupo_musical_nome like %s
+```
 ### Listar membros de um Grupo Musical
 Dado um nome do grupo musical, lista todos os artista presentes no grupo.
 A pesquisa é feita através do id do grupo_musical(nome) na tabela de artista_grupo_musical, 
@@ -624,6 +647,94 @@ INTO
     (texto, musica_id, compositor_artista_id) 
 VALUES
     (%s, %s, %s)
+```
+
+### Criar uma playlist
+Dado um nome da playlist e o username do criador, cria uma nova playlist.
+`bdcringe.database.playlists.insert(nome, username)` 
+```sql
+INSERT 
+INTO
+    playlist
+    (nome, utilizador_username)
+VALUES
+    (%s, %s)
+```
+### Editar playlist 
+A edição da playlist passa por adicionar/remover músicas, listar as músicas ou alterar a sua visibilidade(publica/privada)
+
+#### Adicionar música
+Dado um id da playlist e o id da música, insere a música na playlist criando uma nova entrada na tabela _playlist_musica_
+`bdcringe.database.playlists.add_song(id_playlist, musica_id)`
+```sql
+INSERT
+    INTO
+        playlist_musica(playlist_id, musica_id)
+        SELECT
+            %s,
+            id
+        FROM
+            musica m
+        WHERE
+            m.id = %s
+```
+
+#### Remover musica
+Dado o id da playlist e o id da música, remove a música da playlist removendo a entrada na tabela _playlist_musica_.
+`bdcringe.database.playlists.remove_song(id_playlist, musica_id)`
+```sql
+DELETE 
+    FROM 
+      playlist_musica
+    WHERE 
+      musica_id = (
+    SELECT 
+      id 
+    FROM 
+      musica
+    WHERE 
+      id = %s
+      ) 
+    and 
+      playlist_id = %s
+```
+
+#### Listar músicas de uma playlist
+Dado o id da playlist retorna todas as músicas que lhe pertencem.
+`bdcringe.database.playlists.list_songs(id_playlist)`
+```sql
+SELECT
+    *
+    FROM
+    musica m, playlist_musica pm, playlist p
+    WHERE
+    pm.musica_id = m.id and
+    pm.playlist_id = p.id and
+    p.id = %s;
+```
+
+#### Alterar visibilidade da playlist
+Dado um id da playlist e o booleano de privacidade (True - privada | False - publica), altera a privacidade da playlist.
+`bdcringe.database.playlists.set_status(id_playlist, bool)`
+```sql
+UPDATE 
+playlist 
+SET 
+privada = %s 
+WHERE 
+id = %s
+```
+
+#### Verificar visibilidade da playlist
+Dado um id da playlist, devolve a privacidade da playlist True - privada | False - publica)
+`bdcringe.database.playlists.get_status(id_playlist)`
+```sql
+SELECT 
+privada 
+FROM 
+playlist 
+WHERE 
+id = %s
 ```
 
 <div class="page-break"></div>
