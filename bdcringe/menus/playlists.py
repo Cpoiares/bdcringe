@@ -20,8 +20,8 @@ def edit_playlist():
     if (option >= 0) and (option < len(listas)):
         id_playlist = int(listas[option][0])
         nome_playlist = listas[option][1]
+        op = '0'
 
-    op = '0'
     while op != '4':
         print("0. Inserir musica.")
         print("1. Remover musica.")
@@ -72,13 +72,13 @@ def edit_playlist():
             print("-----------------------------------")
 
         elif op == '3':
-            value = playlists.get_status(id_playlist)[0]
+            value = playlists.get_status(id_playlist)
             print(value)
-            if value is not None and value[0] is True:
+            if value[0] is True:
                 print("Playlist {0} privada. Tornar pública?\n0 - Sim\n1 - Não")
                 if input("> ") == '0':
                     playlists.set_status(id_playlist, False)
-            elif value is not None and value[0] is False:
+            elif value[0] is False:
                 print("Playlist {0} publica. Tornar privada?\n0 - Sim\n1 - Não")
                 if input("> ") == '0':
                     playlists.set_status(id_playlist, True)
@@ -103,6 +103,7 @@ def menu():
 
     op = 0
     while op != len(options):
+        print(chr(27) + "[2J") # clear
         for i, option in enumerate(options):
             print("{0}. {1} {3}".format(i, "[E]" if option[2] else "   ", *option))
         print(len(options), ". Sair")

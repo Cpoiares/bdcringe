@@ -122,6 +122,7 @@ def get_status(id_playlist):
         return value
     except DatabaseError as error:
         print(error)
+        return None
 
 
 def set_status(playlist_id, bool):
