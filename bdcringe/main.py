@@ -90,7 +90,8 @@ def list_artist_songs():
 
 def main_menu():
     options = [
-        (search_artist, "Procurar artista.", False),
+        (insert_label, "Inserir editora.", True),
+        (make_editor, "Tornar editor.", True),
         (insert_artist, "Inserir Artista.", True),
         (groups.menu, "Gestão de grupos.", False),
         (albums.menu, "Gestão de albuns.", False),
@@ -98,12 +99,8 @@ def main_menu():
         (insert_label, "Inserir editora.", True),
         (list_artist_songs, "Listar musicas de um artista.", False),
         (list_labels, "Listar editoras.", False),
-        (playlists.menu, "Gestão de playlists", False),
         (make_editor, "Tornar editor.", True),
     ]
-
-    print(User.username)
-    print(User.editor)
 
     op = 0
     while op != len(options):
@@ -146,9 +143,9 @@ if __name__ == '__main__':
 
     while not online and not leave:
         print(chr(27) + "[2J") # clear
-        print("1. Register")
+        print("1. Registar")
         print("2. Login")
-        print("3. Leave")
+        print("3. Sair")
         option = input("> ")
 
         if option == '1':
@@ -159,7 +156,7 @@ if __name__ == '__main__':
             leave = True
 
         if leave:
-            print("Adeuxito manito")
+            print("Adeus.")
             exit(0)
 
         if not online:
