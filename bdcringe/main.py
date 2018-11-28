@@ -7,18 +7,6 @@ import bdcringe.database.albuns as albuns
 from psycopg2 import DatabaseError
 
 
-def login():
-    username = input("Username: ")
-    password = input("Password: ")
-    return user.login(username, password)
-
-
-def register():
-    username = input("Username: ")
-    password = input("Password: ")
-    return user.register(username, password)
-
-
 def main_menu():
     options = {
         0: search_artist,
@@ -51,6 +39,18 @@ def main_menu():
             options[option]()
 
 
+def login():
+    username = input("Username: ")
+    password = input("Password: ")
+    return user.login(username, password)
+
+
+def register():
+    username = input("Username: ")
+    password = input("Password: ")
+    return user.register(username, password)
+
+
 def list_labels():
     values = labels.get_all()
 
@@ -59,8 +59,7 @@ def list_labels():
 
 
 def insert_label():
-    print("Inserir nova editora")
-    nome = input("Nome da editora")
+    nome = input("Nome da editora: ")
     if labels.insert(nome):
         print("Sucess")
     else:
@@ -92,17 +91,6 @@ def insert_artist():
         print(error)
     else:
         print("Success.\nBack to main menu.")
-        main_menu()
-
-
-def insert_label():
-    label = input("Introduza o nome da editora\n> ")
-    try:
-        labels.insert(label)
-    except DatabaseError as error:
-        print(error)
-    else:
-        print('Sucess')
         main_menu()
 
 
