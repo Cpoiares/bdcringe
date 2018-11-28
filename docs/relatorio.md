@@ -419,6 +419,8 @@ FROM
 ### Inserir Grupo Musical
 Dado um nome, data de inicio e data de fim, insere um novo grupo musical.
 
+`bdcringe.database.groups.insert(nome, inicio, fim)`
+
 ```sql
 INSERT
     INTO
@@ -431,8 +433,9 @@ INSERT
 <div class="page-break"></div>
 
 ### Adiciona Artista ao Grupo Musical
+Dado o id do artista e o nome do grupo musical, insere o artista um novo artista_grupo_musical.
 
-Dado um nome de artista e o nome do grupo musical, insere o artista um novo artista_grupo_musical.
+`bdcringe.database.groups.add_artist_id(id_artista, grupo)`
 
 ```sql
 INSERT
@@ -440,22 +443,20 @@ INSERT
         artista_grupo_musical
         (artista_id, grupo_musical_nome)
         SELECT
-            a.id,
-            g.nome
+            %s,
+            nome
         FROM
-            artista a,
-            grupo_musical g
+            grupo_musical
         WHERE
-            a.nome LIKE %s and
-            g.nome LIKE %s
+            nome like %s
 ```
 
-### Listar membros de um Grupo Musical 
-[comment]: <> "Se calhar pesquisas complexas é melhor explicar assim não"
-[comment]: <> "add_artist e add_artist_id suponho que o add_artist seja o meu e seja para apagar -> groups.py"
+### Listar membros de um Grupo Musical
 Dado um nome do grupo musical, lista todos os artista presentes no grupo.
 A pesquisa é feita através do id do grupo_musical(nome) na tabela de artista_grupo_musical, 
 listando toda informação dos artistas associados ao id do grupo_musical(nome).
+
+`bdcringe.database.groups.members(nome)`
 
 ```sql
 SELECT
@@ -464,14 +465,18 @@ FROM
     artista a,
     artista_grupo_musical agm
 WHERE
-    agm.grupo_musical_nome LIKE %s and
-    a.id = agm.artista_id
+    a.id = agm.artista_id ands
+    agm.grupo_musical_nome like %s
 ```
  
 ### Insere Música
 Este processo é feito em dois passos, criando uma entrada na tabela musica e criando posteriormente uma entrada na tabela musica_artista.
+
+`bdcringe.database.songs.insert(nome, data, historia, genero, album, id_artist)`
+
 #### Criar Musica e inserir na base de dados
 Dado um nome da música, uma data de criação válida, um resumo breve da história, género, e nome do album cria uma nova música.
+
 
 ```sql
 INSERT 
@@ -485,9 +490,9 @@ INSERT
 <div class="page-break"></div>
 
 #### Associar a música a um artista
-
 Dado o nome do artista a quem está associada a música, associa a música ao artista através da tabela musica_artista.
 A associação é feita através dos identificadores, o que é devolvido pela subconsulta.
+
 ```sql
 INSERT 
     INTO
@@ -504,8 +509,9 @@ INSERT
             a.nome LIKE '%s'
 ```
 ### Procurar Música
-
 Dado um nome é retornada toda a informação geral e a lista de artistas de cada música encontrada.
+
+`bdcringe.database.songs.search_name(nome)`
 
 ```sql
 SELECT
@@ -523,6 +529,22 @@ WHERE
     a.id = ma.artista_id
     and m.id = ma.musica_id
     and m.nome LIKE '%%s%'
+```
+
+
+### Adicionar uma letra a uma música
+
+Dado o id do compositor (artista), o id da música e a letra, insere uma nova letra na tabela.
+
+`bdcringe.database.songs.letra(musica, compositor, texto)`
+
+```sql
+INSERT
+INTO
+    letra
+    (texto, musica_id, compositor_artista_id) 
+VALUES
+    (%s, %s, %s)
 ```
 
 <div class="page-break"></div>

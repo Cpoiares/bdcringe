@@ -41,8 +41,8 @@ def members(nome):
         artista a,
         artista_grupo_musical agm     
     WHERE
-        agm.grupo_musical_nome like %s and
-        a.id = agm.artista_id
+        a.id = agm.artista_id ands
+        agm.grupo_musical_nome like %s
     """
 
     values = None
