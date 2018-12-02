@@ -51,7 +51,7 @@ def search():
     if (option >= 0) and (option < len(lista)):
         nome_album = lista[option][0]
         op = '0'
-        while op != '2':
+        while op != '4':
             print("0. Listar musicas.")
             print("1. [E] Adicionar musica.")
             print("2. Escrever critica.")

@@ -2,15 +2,25 @@ from psycopg2 import DatabaseError
 from bdcringe.database import Database
 
 
+def search(music_name):
+    sql = """SELECT * FROM musica WHERE nome like %(like)s ESCAPE '='"""
+    values = None
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (dict(like='%'+music_name+'%')))
+        values = cur.fetchall()
+
+    except DatabaseError as error:
+        print(error)
+
+    return values
+
+# not even used
 def search_name(music_name):
     sql_music_info = """
         select
-            m.nome,
-            m.data,
-            m.historia,
-            m.genero,
-            a.nome,
-            a.data_nascimento
+            *
         from
             artista a,
             musica_artista ma,
@@ -34,7 +44,24 @@ def search_name(music_name):
     return values
 
 
-def insert(nome, data, historia, genero, album, artist):
+def insert_song_artist(artista_id, musica_id):
+    sql = """INSERT
+          INTO 
+          musica_artista(artista_id, musica_id)
+          VALUES(%s, %s)
+        """
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (artista_id,musica_id))
+        conn.commit()
+    except DatabaseError as error:
+        print(error)
+        return False
+    return True
+
+
+'''def insert(nome, data, historia, genero, album, artist):
     sql_musica = """
         INSERT 
         INTO
@@ -70,6 +97,7 @@ def insert(nome, data, historia, genero, album, artist):
         return False
 
     return True
+'''
 
 
 def insert_song(nome, data, historia, genero, album):
@@ -94,7 +122,7 @@ def insert_song(nome, data, historia, genero, album):
     return True
 
 
-def letra(musica, compositor, texto):
+def letra(musica_id, compositor, texto):
     sql = """
         insert
         into
@@ -107,12 +135,30 @@ def letra(musica, compositor, texto):
     try:
         conn = Database.connect()
         cur = conn.cursor()
-        cur.execute(sql, (texto, musica, compositor))
+        cur.execute(sql, (texto, musica_id, compositor))
         conn.commit()
     except DatabaseError as error:
         print(error)
         return False
     return True
+
+
+def get_letra(musica_id):
+    sql = """
+        SELECT 
+        texto, compositor_artista_id
+        FROM
+        letra
+        WHERE musica_id = %s 
+        """
+    try:
+        conn = Database.connect()
+        cur = conn.cursor()
+        cur.execute(sql, (musica_id, ))
+        values = cur.fetchall()
+    except Database as error:
+        raise DatabaseError(error)
+    return values
 
 
 def get_all():
